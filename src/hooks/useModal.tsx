@@ -5,6 +5,8 @@ import React, {
   useMemo,
   useState
 } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCheck, faTimes, faSave } from '@fortawesome/free-solid-svg-icons';
 
 const ModalContainer: React.FC<{ children: React.ReactNode }> = ({
   children
@@ -90,25 +92,19 @@ export const useModal: (options?: IUseModal) => any = (
               }}
             />
             {!closeDisabled ? (
-              <div style={{ position: 'relative' }}>
+              <div className="relative inline-block px-6 py-4 bg-secondary rounded-lg text-white">
                 <div
+                  className="absolute top-4 right-4 text-white cursor-pointer"
                   onClick={() => hideModal()}
-                  style={{
-                    position: 'absolute',
-                    top: -36,
-                    right: 0,
-                    color: 'white',
-                    display: 'flex',
-                    cursor: 'pointer'
-                  }}
                 >
-                  <div style={{ marginRight: '4px' }}>Close</div>
-                  <div>&#x2715;</div>
+                  <FontAwesomeIcon icon={faTimes} size="2x" />
                 </div>
                 {children}
               </div>
             ) : (
-              <div style={{ position: 'relative' }}>{children}</div>
+              <div className="relative inline-block px-6 py-4 rounded-lg bg-secondary text-white">
+                {children}
+              </div>
             )}
           </ModalContainer>
         ) : null;

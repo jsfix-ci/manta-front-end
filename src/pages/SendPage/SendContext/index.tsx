@@ -554,6 +554,7 @@ export const SendContextProvider = (props) => {
     isPublicTransfer,
     isToPrivate,
     isToPublic,
+    fetchPublicBalance,
     ...state
   };
 
