@@ -1,11 +1,11 @@
 // @ts-nocheck
 import React, { useState, useEffect } from 'react';
 import Select, { components } from 'react-select';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCopy, faCheck } from '@fortawesome/free-solid-svg-icons';
-import { useTxStatus } from 'contexts/txStatusContext';
 import classNames from 'classnames';
+
+import { useTxStatus } from 'contexts/txStatusContext';
 import { useSend } from '../SendContext';
+import CopyPasteIcon from 'components/CopyPasteIcon';
 
 const PublicFromAccountSelect = () => {
   const {
@@ -37,8 +37,8 @@ const PublicFromAccountSelect = () => {
       className={classNames(
         'w-100 gradient-border flex items-center h-16',
         'rounded-full p-0.5 text-black dark:text-white',
-        {'disabled': disabled})
-      }
+        { disabled: disabled }
+      )}
       isSearchable={false}
       value={selectedOption}
       onChange={onChangeOption}
@@ -57,23 +57,6 @@ const PublicFromAccountSelect = () => {
 };
 
 const AccountSelectSingleValue = ({ data }) => {
-  const [addressCopied, setAddressCopied] = useState(false);
-
-  const copyToClipboard = (e) => {
-    navigator.clipboard.writeText(data.value.address);
-    setAddressCopied(true);
-    e.stopPropagation();
-    return false;
-  };
-
-  useEffect(() => {
-    const timer = setTimeout(
-      () => addressCopied && setAddressCopied(false),
-      2000
-    );
-    return () => clearTimeout(timer);
-  }, [addressCopied]);
-
   return (
     <div className="pl-4 pr-6 border-0 flex flex-grow items-end gap-2 relative">
       <div className="text-lg text-black dark:text-white">
@@ -82,19 +65,10 @@ const AccountSelectSingleValue = ({ data }) => {
       <div className="text-xs manta-gray">
         {data.value.address.slice(0, 10)}...{data.value.address.slice(-10)}
       </div>
-      <data id="clipBoardCopy" value={data.value.address}/>
-      {addressCopied ? (
-        <FontAwesomeIcon
-          icon={faCheck}
-          className="ml-auto cursor-pointer absolute right-1 top-1/2 transform -translate-y-1/2"
-        />
-      ) : (
-        <FontAwesomeIcon
-          icon={faCopy}
-          className="ml-auto cursor-pointer absolute right-1 top-1/2 transform -translate-y-1/2"
-          onMouseDown={(e) => copyToClipboard(e)}
-        />
-      )}
+      <data id="clipBoardCopy" value={data.value.address} />
+      <div className="ml-auto cursor-pointer absolute right-1 top-1/2 transform -translate-y-1/2">
+        <CopyPasteIcon textToCopy={data.value.address} />
+      </div>
     </div>
   );
 };

@@ -104,6 +104,6 @@ PublicBalancesContextProvider.propTypes = {
   children: PropTypes.any
 };
 
-export const usePublicBalancesContext = () => ({
+export const usePublicBalances = () => ({
   ...useContext(PublicBalancesContext)
 });

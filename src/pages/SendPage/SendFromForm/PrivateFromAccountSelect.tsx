@@ -1,10 +1,9 @@
 // @ts-nocheck
 import React, { useState, useEffect } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCopy, faCheck } from '@fortawesome/free-solid-svg-icons';
 import { usePrivateWallet } from 'contexts/privateWalletContext';
 import { useModal } from 'hooks';
 import AccountModalDisplay from 'components/AccountModalDisplay';
+import CopyPasteIcon from 'components/CopyPasteIcon';
 
 const PrivateFromAccountSelect = () => {
   const { privateAddress } = usePrivateWallet();
@@ -13,23 +12,6 @@ const PrivateFromAccountSelect = () => {
     showModal: showAccountModal,
     hideModal: hideAccountModal
   } = useModal();
-
-  const [addressCopied, setAddressCopied] = useState(false);
-
-  const copyToClipboard = (e) => {
-    navigator.clipboard.writeText(privateAddress);
-    setAddressCopied(true);
-    e.stopPropagation();
-    return false;
-  };
-
-  useEffect(() => {
-    const timer = setTimeout(
-      () => addressCopied && setAddressCopied(false),
-      1500
-    );
-    return () => clearTimeout(timer);
-  }, [addressCopied]);
 
   return (
     <>
@@ -43,14 +25,7 @@ const PrivateFromAccountSelect = () => {
         </span>
         <data id="clipBoardCopy" value={privateAddress} />
         <div className="text-black dark:text-white ml-auto cursor-pointer absolute right-6 top-1/2 transform -translate-y-1/2 text-base">
-          {addressCopied ? (
-            <FontAwesomeIcon icon={faCheck} />
-          ) : (
-            <FontAwesomeIcon
-              icon={faCopy}
-              onMouseDown={(e) => copyToClipboard(e)}
-            />
-          )}
+          <CopyPasteIcon textToCopy={privateAddress} />
         </div>
       </div>
       <ModalWrapper>

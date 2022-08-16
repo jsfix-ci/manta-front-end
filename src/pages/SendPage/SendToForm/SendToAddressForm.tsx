@@ -1,19 +1,19 @@
 // @ts-nocheck
-import React, { useEffect } from 'react';
-import { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Select, { components } from 'react-select';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCopy, faCheck } from '@fortawesome/free-solid-svg-icons';
-import GradientText from 'components/GradientText';
-import { useTxStatus } from 'contexts/txStatusContext';
 import classNames from 'classnames';
+
 import {
   validatePrivateAddress,
   validatePublicAddress
 } from 'utils/validation/validateAddress';
+import { useTxStatus } from 'contexts/txStatusContext';
 import { useSend } from '../SendContext';
 import { usePrivateWallet } from 'contexts/privateWalletContext';
+
 import BalanceComponent from 'components/Balance';
+import CopyPasteIcon from 'components/CopyPasteIcon';
+import GradientText from 'components/GradientText';
 
 const SendToAddressForm = ({
   internalAccountOptions,
@@ -224,42 +224,15 @@ const SendToAddressFormSingleValue = (props) => {
   const { data } = props;
   const { label, value } = data;
 
-  const [addressCopied, setAddressCopied] = useState(false);
-
-  const copyToClipboard = (e) => {
-    navigator.clipboard.writeText(value);
-    setAddressCopied(true);
-    e.stopPropagation();
-    return false;
-  };
-
-  useEffect(() => {
-    const timer = setTimeout(
-      () => addressCopied && setAddressCopied(false),
-      2000
-    );
-
-    return () => clearTimeout(timer);
-  }, [addressCopied]);
-
   return (
     <div className="pl-4 pr-6 border-0 flex flex-grow items-end gap-2 relative">
       <div className="text-lg text-black dark:text-white">{label}</div>
       <div className="text-xs manta-gray">
         {value.slice(0, 10)}...{value.slice(-10)}
       </div>
-      {addressCopied ? (
-        <FontAwesomeIcon
-          icon={faCheck}
-          className="ml-auto cursor-pointer absolute right-1 top-1/2 transform -translate-y-1/2"
-        />
-      ) : (
-        <FontAwesomeIcon
-          icon={faCopy}
-          className="ml-auto cursor-pointer absolute right-1 top-1/2 transform -translate-y-1/2"
-          onMouseDown={(e) => copyToClipboard(e)}
-        />
-      )}
+      <div className="ml-auto cursor-pointer absolute right-1 top-1/2 transform -translate-y-1/2">
+        <CopyPasteIcon textToCopy={value} />
+      </div>
     </div>
   );
 };
