@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCopy, faCheck } from '@fortawesome/free-solid-svg-icons';
 import { usePrivateWallet } from 'contexts/privateWalletContext';
 import { useModal } from 'hooks';
-import Account from 'components/Account';
+import AccountModalDisplay from 'components/AccountModalDisplay';
 
 const PrivateFromAccountSelect = () => {
   const { privateAddress } = usePrivateWallet();
@@ -54,7 +54,7 @@ const PrivateFromAccountSelect = () => {
         </div>
       </div>
       <ModalWrapper>
-        <Account />
+        <AccountModalDisplay />
       </ModalWrapper>
     </>
   );
