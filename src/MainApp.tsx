@@ -9,6 +9,7 @@ import Sidebar from 'components/Sidebar';
 import ThemeToggle from 'components/ThemeToggle';
 import userIsMobile from 'utils/ui/userIsMobile';
 import NewerSignerVersionRequiredModal from 'components/Modal/newerSignerVersionRequiredModal';
+import AccountDisplay from 'components/AccountModalDisplay';
 import DowntimeModal from 'components/Modal/downtimeModal';
 import signerIsOutOfDate from 'utils/validation/signerIsOutOfDate';
 import { usePrivateWallet } from 'contexts/privateWalletContext';
@@ -39,7 +40,8 @@ function MainApp() {
         <Route path="/send" render={() => <Redirect to="/transact" />} exact />
         <Route path="/transact" component={SendPage} exact />
       </Switch>
-      <div className="p-4 hidden change-theme lg:block fixed right-0 bottom-0">
+      <AccountDisplay />
+      <div className="p-4 hidden change-theme lg:block fixed right-72 bottom-0">
         <ThemeToggle />
       </div>
     </div>

@@ -11,7 +11,7 @@ const Sidebar = () => {
   const { blockNumber } = useSubstrate();
 
   return (
-    <div className="sidebar-menu hidden lg:block bg-secondary">
+    <div className="sidebar-menu hidden lg:block bg-secondary w-72 z-20">
       <div className="py-6 h-full flex flex-col justify-between overflow-visible">
         <div>
           <div className="logo-content pl-5 hidden w-full items-center lg:flex">
@@ -34,7 +34,11 @@ const Sidebar = () => {
                 blockNumber ? 'text-green-500' : 'text-red-500'
               } text-xss flex items-center gap-2`}
             >
-              <a href={config.SUBSCAN_URL + '/block'} target="_blank" rel="noreferrer">
+              <a
+                href={config.SUBSCAN_URL + '/block'}
+                target="_blank"
+                rel="noreferrer"
+              >
                 <span className="flex h-2 w-2 relative">
                   <span
                     className={`animate-ping absolute inline-flex h-full w-full rounded-full ${
