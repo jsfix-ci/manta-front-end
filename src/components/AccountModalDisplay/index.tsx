@@ -50,7 +50,7 @@ const AccountDisplay = () => {
   console.log({ assets, publicBalances });
   return (
     <div className="w-72 bg-gray-600 z-20 text-white">
-      <div className="pt-20 px-8">
+      {/* <div className="pt-20 px-8">
         <div className="flex gap-8">
           <div className="w-8" />
           <div className="flex gap-2 items-center text-xss">
@@ -79,14 +79,14 @@ const AccountDisplay = () => {
               </div>
             ))
           : null}
-      </div>
-      {/* <h1 className="text-center mt-6 text-2xl">My Account</h1> */}
-      {/* <div className="flex justify-center gap-3 mt-8">
+      </div> */}
+      <h1 className="text-center mt-6 text-2xl">My Account</h1>
+      <div className="flex justify-center gap-3 mt-8">
         <h2 className="text-xl">My Private Address</h2>
         <p className="w-80 break-all">{privateAddress}</p>
         <CopyPasteIcon textToCopy={privateAddress} />
-      </div> */}
-      {/* <div className="mt-8">
+      </div>
+      <div className="mt-8">
         <h2 className="text-lg">Balances</h2>
         <div className="mt-4">
           <div className="flex gap-4">
@@ -94,7 +94,7 @@ const AccountDisplay = () => {
             <div className="w-52">Public</div>
             <div className="w-52">Private</div>
           </div>
-          {assets.map((asset: AssetType) => {
+          {/* {assets.map((asset: AssetType) => {
             const balance = getPublicBalance(asset);
             return (
               <div className="flex gap-4">
@@ -110,13 +110,13 @@ const AccountDisplay = () => {
                   />
                 </div>
                 <div className="w-52">{balance.toString()}</div>
-                {/* <div className="w-52">{balance.privateBalance.toString()}</div>
+                <div className="w-52">{balance.privateBalance.toString()}</div>
               </div>
             );
-          })}
+          })} */}
           <div className="flex gap-4"></div>
         </div>
-      </div> */}
+      </div>
     </div>
   );
 };

@@ -40,7 +40,6 @@ function MainApp() {
         <Route path="/send" render={() => <Redirect to="/transact" />} exact />
         <Route path="/transact" component={SendPage} exact />
       </Switch>
-      <AccountDisplay />
       <div className="p-4 hidden change-theme lg:block fixed right-72 bottom-0">
         <ThemeToggle />
       </div>

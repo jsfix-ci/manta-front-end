@@ -9,6 +9,8 @@ import {
   faTimes,
   faExclamationTriangle
 } from '@fortawesome/free-solid-svg-icons';
+import { useModal } from 'hooks';
+import AccountModalDisplay from 'components/AccountModalDisplay';
 import Version from 'types/Version';
 
 const SignerConnectionLabelTitle = () => {
@@ -60,16 +62,25 @@ SignerConnectedLabel.propTypes = {
 
 const SignerConnectionStatusLabel = () => {
   const { signerVersion } = usePrivateWallet();
+  const { ModalWrapper, showModal } = useModal();
   return (
-    <div className="flex text-center items-center text-green-500 pr-6">
-      {!signerVersion ? (
-        <SignerNotConnectedLabel />
-      ) : signerIsOutOfDate(signerVersion) ? (
-        <SignerOutOfDateLabel signerVersion={signerVersion} />
-      ) : (
-        <SignerConnectedLabel signerVersion={signerVersion} />
-      )}
-    </div>
+    <>
+      <div
+        className="flex text-center items-center text-green-500 pr-6 cursor-pointer"
+        onClick={showModal}
+      >
+        {!signerVersion ? (
+          <SignerNotConnectedLabel />
+        ) : signerIsOutOfDate(signerVersion) ? (
+          <SignerOutOfDateLabel signerVersion={signerVersion} />
+        ) : (
+          <SignerConnectedLabel signerVersion={signerVersion} />
+        )}
+      </div>
+      <ModalWrapper>
+        <AccountModalDisplay />
+      </ModalWrapper>
+    </>
   );
 };
 

@@ -28,9 +28,6 @@ const PrivateFromAccountSelect = () => {
           <CopyPasteIcon textToCopy={privateAddress} />
         </div>
       </div>
-      <ModalWrapper>
-        <AccountModalDisplay />
-      </ModalWrapper>
     </>
   );
 };
