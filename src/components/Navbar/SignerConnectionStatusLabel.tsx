@@ -12,6 +12,7 @@ import {
 import { useModal } from 'hooks';
 import AccountModalDisplay from 'components/AccountModalDisplay';
 import Version from 'types/Version';
+import { useConfig } from 'contexts/configContext';
 
 const SignerConnectionLabelTitle = () => {
   return <p className="text-primary text-sm pb-2">Manta Signer</p>;
@@ -61,26 +62,19 @@ SignerConnectedLabel.propTypes = {
 };
 
 const SignerConnectionStatusLabel = () => {
+  const config = useConfig();
   const { signerVersion } = usePrivateWallet();
   const { ModalWrapper, showModal } = useModal();
   return (
-    <>
-      <div
-        className="flex text-center items-center text-green-500 pr-6 cursor-pointer"
-        onClick={showModal}
-      >
-        {!signerVersion ? (
-          <SignerNotConnectedLabel />
-        ) : signerIsOutOfDate(signerVersion) ? (
-          <SignerOutOfDateLabel signerVersion={signerVersion} />
-        ) : (
-          <SignerConnectedLabel signerVersion={signerVersion} />
-        )}
-      </div>
-      <ModalWrapper>
-        <AccountModalDisplay />
-      </ModalWrapper>
-    </>
+    <div className="flex text-center items-center text-green-500 pr-6">
+      {!signerVersion ? (
+        <SignerNotConnectedLabel />
+      ) : signerIsOutOfDate(config, signerVersion) ? (
+        <SignerOutOfDateLabel signerVersion={signerVersion} />
+      ) : (
+        <SignerConnectedLabel signerVersion={signerVersion} />
+      )}
+    </div>
   );
 };
 

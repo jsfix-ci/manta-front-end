@@ -7,13 +7,12 @@ import {
   validatePrivateAddress,
   validatePublicAddress
 } from 'utils/validation/validateAddress';
-import { useTxStatus } from 'contexts/txStatusContext';
-import { useSend } from '../SendContext';
 import { usePrivateWallet } from 'contexts/privateWalletContext';
 
-import BalanceComponent from 'components/Balance';
-import CopyPasteIcon from 'components/CopyPasteIcon';
 import GradientText from 'components/GradientText';
+import BalanceComponent from 'components/Balance';
+import { useTxStatus } from 'contexts/txStatusContext';
+import { useSend } from '../SendContext';
 
 const SendToAddressForm = ({
   internalAccountOptions,
