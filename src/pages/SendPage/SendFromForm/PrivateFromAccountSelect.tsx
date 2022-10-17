@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { usePrivateWallet } from 'contexts/privateWalletContext';
 import { useModal } from 'hooks';
-import AccountModalDisplay from 'components/AccountModalDisplay';
+import AccountModalDisplay from 'components/ZkAccoutModal';
 import CopyPasteIcon from 'components/CopyPasteIcon';
 
 const PrivateFromAccountSelect = () => {

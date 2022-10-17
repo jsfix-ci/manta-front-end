@@ -10,7 +10,7 @@ import {
   faExclamationTriangle
 } from '@fortawesome/free-solid-svg-icons';
 import { useModal } from 'hooks';
-import AccountModalDisplay from 'components/AccountModalDisplay';
+import AccountModalDisplay from 'components/ZkAccoutModal';
 import Version from 'types/Version';
 import { useConfig } from 'contexts/configContext';
 

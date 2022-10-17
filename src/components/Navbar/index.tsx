@@ -4,7 +4,7 @@ import AccountSelect from 'components/Accounts/AccountSelect';
 // import Navs from './Navs';
 import ChainSelector from './ChainSelector';
 import SignerConnectionStatusLabel from './SignerConnectionStatusLabel';
-
+import ZkAddress from './ZkAddress';
 
 export const CalamariNavbar = () => {
   return (
@@ -22,7 +22,7 @@ export const DolphinNavbar = () => {
     <div className="py-4 px-10 flex justify-between items-center relative sticky left-0 right-0 top-0 z-50 bg-primary">
       <ChainSelector />
       {/* <Navs /> */}
-      <SignerConnectionStatusLabel />
+      <ZkAddress />
     </div>
   );
 };
