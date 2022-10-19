@@ -4,12 +4,15 @@ import AppRouter from 'AppRouter';
 import { ThemeProvider } from 'contexts/themeContext';
 import { KeyringContextProvider } from './contexts/keyringContext';
 import { PublicBalancesContextProvider } from 'contexts/publicBalancesContext';
+import { UsdPricesContextProvider } from 'contexts/usdPricesContext';
 
 function App() {
   return (
     <KeyringContextProvider>
       <ThemeProvider>
-        <AppRouter />
+        <UsdPricesContextProvider>
+          <AppRouter />
+        </UsdPricesContextProvider>
       </ThemeProvider>
     </KeyringContextProvider>
   );

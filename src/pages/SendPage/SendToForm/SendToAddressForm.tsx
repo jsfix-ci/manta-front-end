@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import Select, { components } from 'react-select';
 import classNames from 'classnames';
-
+import CopyPasteIcon from 'components/CopyPasteIcon';
 import {
   validatePrivateAddress,
   validatePublicAddress
