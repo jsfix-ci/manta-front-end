@@ -1,8 +1,9 @@
 // @ts-nocheck
-import React, { useEffect, createContext, useState } from 'react';
+import React, { useEffect, createContext, useState, useContext } from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import AssetType from 'types/AssetType';
+import Decimal from 'decimal.js';
 
 const UsdPricesContext = createContext();
 
@@ -23,7 +24,9 @@ export const UsdPricesContextProvider = (props) => {
 
     if (res.data) {
       const prices = {};
-      Object.keys(res.data).map((id) => (prices[id] = res.data[id]['usd']));
+      Object.keys(res.data).map(
+        (id) => (prices[id] = new Decimal(res.data[id]['usd']))
+      );
       setUsdPrices({ ...usdPrices, ...prices });
     }
   };
