@@ -11,23 +11,29 @@ export const UsdPricesContextProvider = (props) => {
   const [usdPrices, setUsdPrices] = useState({});
 
   const fetchUsdPrices = async () => {
-    const assets = AssetType.AllCurrencies(false);
-    const ids = assets.reduce((res, asset, index) => {
-      return `${res}${asset.coingeckoId}${
-        index < assets.length - 1 ? ',' : ''
-      }`;
-    }, '');
+    try {
+      const assets = AssetType.AllCurrencies(false);
+      const ids = assets.reduce((res, asset, index) => {
+        return `${res}${asset.coingeckoId}${
+          index < assets.length - 1 ? ',' : ''
+        }`;
+      }, '');
 
-    const res = await axios.get(
-      `https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currencies=usd`
-    );
-
-    if (res.data) {
-      const prices = {};
-      Object.keys(res.data).map(
-        (id) => (prices[id] = new Decimal(res.data[id]['usd']))
+      const res = await axios.get(
+        `https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currencies=usd`
       );
-      setUsdPrices({ ...usdPrices, ...prices });
+
+      if (res.data) {
+        const prices = {};
+        assets.map((asset) => {
+          prices[asset.baseTicker] = res.data[asset.coingeckoId]
+            ? new Decimal(res.data[asset.coingeckoId]['usd'])
+            : null;
+        });
+        setUsdPrices({ ...prices });
+      }
+    } catch (err) {
+      setUsdPrices({});
     }
   };
 

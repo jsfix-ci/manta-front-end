@@ -55,7 +55,7 @@ module.exports = {
       borderColor: {
         'manta-gray': 'var(--color-bg-manta-gray)',
         primary: 'var(--color-border-primary)',
-        secondary: 'var(--color-bg-button)'
+        secondary: 'var(--color-border-secondary)'
       }
     }
   },

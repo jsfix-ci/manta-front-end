@@ -34,7 +34,7 @@ export const PublicBalancesContextProvider = (props) => {
     if (!api || !address) {
       return null;
     }
-    await api.isReady;
+
     if (assetType.isNativeToken) {
       const unsub = await api.query.system.account(address, (balance) => {
         setPublicBalances((prev) => {
@@ -68,8 +68,7 @@ export const PublicBalancesContextProvider = (props) => {
     if (!api || !address) {
       return null;
     }
-    console.log({ address });
-    await api.isReady;
+
     const assetTypes = AssetType.AllCurrencies(false);
     await Promise.all(
       assetTypes.map(async (assetType) => {
