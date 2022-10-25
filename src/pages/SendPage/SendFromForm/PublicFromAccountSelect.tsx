@@ -1,11 +1,11 @@
 // @ts-nocheck
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Select, { components } from 'react-select';
 import classNames from 'classnames';
 
 import { useTxStatus } from 'contexts/txStatusContext';
-import { useSend } from '../SendContext';
 import CopyPasteIcon from 'components/CopyPasteIcon';
+import { useSend } from '../SendContext';
 
 const PublicFromAccountSelect = () => {
   const {
