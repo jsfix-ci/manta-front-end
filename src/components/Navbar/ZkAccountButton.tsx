@@ -16,7 +16,7 @@ const ZkAccountButton = () => {
           <img className="w-6 h-6" src={MantaIcon} alt="Manta" />
           zkAddress
         </div>
-        {showZkModal ? <ZkAccountModal /> : null}
+        {showZkModal && <ZkAccountModal />}
       </OutsideClickHandler>
     </div>
   );

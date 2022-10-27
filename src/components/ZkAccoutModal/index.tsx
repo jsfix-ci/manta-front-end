@@ -12,7 +12,7 @@ import AssetType from 'types/AssetType';
 import Balance from 'types/Balance';
 import decimalToUsdString from 'utils/general/decimal';
 import CopyPasteIcon from 'components/CopyPasteIcon';
-import ZkAccountModalSkeleton from './ZkAccountModal.skeleton';
+import ZkAccountModalSkeleton from './ZkAccountModalSkeleton';
 
 const AccountDisplay = () => {
   const { txStatus } = useTxStatus();
@@ -39,16 +39,10 @@ const AccountDisplay = () => {
         try {
           const privateBalance = await getSpendableBalance(assetType);
           if (privateBalance) {
-            const usdBalanceString = privateBalance.toUsdString(
-              usdPrices[assetType.baseTicker]
-                ? usdPrices[assetType.baseTicker]
-                : new Decimal(0)
-            );
-            const usdBalance = privateBalance.toUsd(
-              usdPrices[assetType.baseTicker]
-                ? usdPrices[assetType.baseTicker]
-                : new Decimal(0)
-            );
+            const assetUsdValue =
+              usdPrices[assetType.baseTicker] || new Decimal(0);
+            const usdBalanceString = privateBalance.toUsdString(assetUsdValue);
+            const usdBalance = privateBalance.toUsd(assetUsdValue);
             total = total.add(usdBalance);
 
             return {
@@ -60,19 +54,13 @@ const AccountDisplay = () => {
 
           return {
             assetType,
-            usdBalanceString: new Balance(
-              assetType,
-              new Decimal(0)
-            ).toUsdString(new Decimal(0)),
+            usdBalanceString: '$0.00',
             privateBalance
           };
         } catch (err) {
           return {
             assetType,
-            usdBalanceString: new Balance(
-              assetType,
-              new Decimal(0)
-            ).toUsdString(new Decimal(0)),
+            usdBalanceString: '',
             privateBalance: null
           };
         }
@@ -94,8 +82,7 @@ const AccountDisplay = () => {
     if (
       isReady &&
       privateAddress &&
-      ((senderAssetType && senderAssetType.isPrivate) ||
-        (receiverAssetType && receiverAssetType.isPrivate))
+      (senderAssetType?.isPrivate || receiverAssetType?.isPrivate)
     ) {
       fetchPrivateBalances();
     }
