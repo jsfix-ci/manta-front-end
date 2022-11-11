@@ -11,7 +11,7 @@ import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 const ModalFAQSection = ({signerIsConnected}) => {
   return (
     <div className="pl-16 pt-12">
-      {!signerIsConnected &&
+      {signerIsConnected === false &&
         <p>
           <FontAwesomeIcon icon={faInfoCircle} />{' '}
           <a
@@ -23,7 +23,7 @@ const ModalFAQSection = ({signerIsConnected}) => {
           Why do I need Manta Signer?</a>
         </p>
       }
-      <p className={classNames({'pt-6': !signerIsConnected})}>
+      <p className={classNames({'pt-6': signerIsConnected === false})}>
         <FontAwesomeIcon icon={faInfoCircle} />{' '}
         <a
           href="https://docs.manta.network/docs/guides/DolphinPay"
