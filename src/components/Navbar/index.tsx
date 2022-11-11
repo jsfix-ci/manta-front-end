@@ -5,7 +5,6 @@ import Menu from 'components/Menu/DotMenu';
 // import Navs from './Navs';
 import ChainSelector from './ChainSelector';
 import ZkAccountButton from './ZkAccountButton';
-// import SignerConnectionStatusLabel from './SignerConnectionStatusLabel';
 
 export const CalamariNavbar = () => {
   return (
@@ -28,7 +27,7 @@ export const DolphinNavbar = () => {
       {/* <Navs /> */}
       <div className="h-12 gap-4 flex justify-end items-center">
         <ZkAccountButton />
-        {/* <SignerConnectionStatusLabel /> */}
+        <AccountSelect />
         <Menu />
       </div>
     </div>

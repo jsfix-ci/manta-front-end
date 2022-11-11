@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
+import classNames from 'classnames';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faCopy } from '@fortawesome/free-solid-svg-icons';
 
 type ICopyPastIconProps = {
+  className?: string;
   textToCopy: string;
 };
 
-const CopyPasteIcon: React.FC<ICopyPastIconProps> = ({ textToCopy }) => {
+const CopyPasteIcon: React.FC<ICopyPastIconProps> = ({ className, textToCopy }) => {
   const [copied, setCopied] = useState(false);
 
   const copyToClipboard = () => {
@@ -20,11 +22,11 @@ const CopyPasteIcon: React.FC<ICopyPastIconProps> = ({ textToCopy }) => {
   }, [copied]);
 
   return copied ? (
-    <FontAwesomeIcon icon={faCheck} />
+    <FontAwesomeIcon className={classNames(className)} icon={faCheck} />
   ) : (
     <FontAwesomeIcon
       icon={faCopy}
-      className="cursor-pointer"
+      className={classNames(`${className} cursor-pointer`)}
       onMouseDown={copyToClipboard}
     />
   );

@@ -24,7 +24,7 @@ const PrivateFromAccountSelect = () => {
           {privateAddress?.slice(0, 10)}...{privateAddress?.slice(-10)}
         </span>
         <data id="clipBoardCopy" value={privateAddress} />
-        <div className="text-black dark:text-white ml-auto cursor-pointer absolute right-6 top-1/2 transform -translate-y-1/2 text-base">
+        <div className="text-fourth ml-auto cursor-pointer absolute right-6 top-1/2 transform -translate-y-1/2 text-base">
           <CopyPasteIcon textToCopy={privateAddress} />
         </div>
       </div>

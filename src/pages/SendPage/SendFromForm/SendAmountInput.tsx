@@ -71,7 +71,7 @@ const SendAmountInput = () => {
           id="amountInput"
           onChange={(e) => onChangeSendAmountInput(e.target.value)}
           className={classNames(
-            'w-full pl-3 pt-1 text-4xl font-bold text-black dark:text-white manta-bg-gray outline-none rounded-2xl',
+            'w-full pl-3 pt-1 text-4xl font-bold text-fourth manta-bg-gray outline-none rounded-2xl',
             { disabled: disabled }
           )}
           value={inputValue}

@@ -36,7 +36,7 @@ const PublicFromAccountSelect = () => {
     <Select
       className={classNames(
         'w-100 gradient-border flex items-center h-16',
-        'rounded-full p-0.5 text-black dark:text-white',
+        'rounded-full p-0.5 text-fourth',
         { disabled: disabled }
       )}
       isSearchable={false}
@@ -59,7 +59,7 @@ const PublicFromAccountSelect = () => {
 const AccountSelectSingleValue = ({ data }) => {
   return (
     <div className="pl-4 pr-6 border-0 flex flex-grow items-end gap-2 relative">
-      <div className="text-lg text-black dark:text-white">
+      <div className="text-lg text-fourth">
         {data.value.meta.name}
       </div>
       <div className="text-xs manta-gray">

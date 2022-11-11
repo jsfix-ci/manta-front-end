@@ -78,7 +78,7 @@ const SendToAddressForm = ({
       <Select
         className={classNames(
           'flex-grow gradient-border flex items-center h-16',
-          'rounded-full p-0.5 text-black dark:text-white'
+          'rounded-full p-0.5 text-fourth'
         )}
         toReactSelectOption={toReactSelectOption}
         setReactSelectExternalOptions={setReactSelectExternalOptions}
@@ -123,7 +123,7 @@ const ReceiverBalanceDisplay = () => {
     <div className="flex justify-between items-center px-6 py-2">
       <BalanceComponent
         balance={balanceString}
-        className="text-black dark:text-white"
+        className="text-fourth"
         loaderClassName="bg-black dark:bg-white"
         loader={shouldShowLoader}
       />
@@ -203,7 +203,7 @@ const SendToAddressInput = ({ isPrivate }) => {
       >
         <input
           id="recipientAddress"
-          className="w-full h-full rounded-full px-5 bg-secondary text-black dark:text-white outline-none"
+          className="w-full h-full rounded-full px-5 bg-secondary text-fourth outline-none"
           onChange={(e) => onChangeInput(e)}
           disabled={disabled}
           placeholder={'address'}
@@ -226,7 +226,7 @@ const SendToAddressFormSingleValue = (props) => {
 
   return (
     <div className="pl-4 pr-6 border-0 flex flex-grow items-end gap-2 relative">
-      <div className="text-lg text-black dark:text-white">{label}</div>
+      <div className="text-lg text-fourth">{label}</div>
       <div className="text-xs manta-gray">
         {value.slice(0, 10)}...{value.slice(-10)}
       </div>

@@ -4,15 +4,12 @@ import Decimal from 'decimal.js';
 import MantaIcon from 'resources/images/manta.png';
 import { useUsdPrices } from 'contexts/usdPricesContext';
 import { useSend } from 'pages/SendPage/SendContext';
-import { usePublicBalances } from 'contexts/publicBalancesContext';
 import { useTxStatus } from 'contexts/txStatusContext';
 import { usePrivateWallet } from 'contexts/privateWalletContext';
-import { useExternalAccount } from 'contexts/externalAccountContext';
 import AssetType from 'types/AssetType';
 import Balance from 'types/Balance';
 import decimalToUsdString from 'utils/general/decimal';
 import CopyPasteIcon from 'components/CopyPasteIcon';
-import ZkAccountModalSkeleton from './ZkAccountModalSkeleton';
 
 const AccountDisplay = () => {
   const { txStatus } = useTxStatus();
@@ -96,82 +93,81 @@ const AccountDisplay = () => {
     receiverAssetType,
     receiverCurrentBalance
   ]);
+  
+  const ZkAccountModalContent = () => {
+    if (privateAddress) {
+      return (
+        <>
+        <div className="flex flex-col gap-3">
+            <div className="border border-secondary bg-white bg-opacity-5 rounded-lg p-1 text-secondary flex items-center justify-center gap-3">
+              <div className="flex items-center gap-3">
+                <img className="w-6 h-6" src={MantaIcon} alt="Manta" />
+                <span className="text-fourth font-light">
+                  {privateAddress.slice(0, 9)}...
+                  {privateAddress.slice(-9)}
+                </span>
+              </div>
+              <CopyPasteIcon className="w-3 h-3" textToCopy={privateAddress} />
+            </div>
+            <div className="border border-secondary bg-white bg-opacity-5 rounded-lg p-1 text-fourth flex flex-col justify-center items-center text-lg">
+              <span className="pt-3 pb-1">Total Balance</span>
+              <div className="text-fourth pb-3 text-2xl font-bold">
+                {totalBalanceString}
+              </div>
+            </div>
+          </div>
+          <div className="flex flex-col border border-secondary rounded-lg px-6 py-4 mt-3 text-secondary overflow-y-auto h-48 bg-white bg-opacity-5">
+            <PrivateTokenTableContent/>
+          </div>
+          </>
+      )
+    } else {
+      return (
+        <div className="whitespace-nowrap text-center">
+            You have no zkAccount yet.
+          </div>
+      )
+    }
+  }
+
+  const PrivateTokenTableContent = () => {
+    if (balances && balances.length > 0) {
+      return balances.map((balance: any) => (
+        <div
+          className="flex items-center justify-between mb-2"
+          key={`balance-${balance.assetType.ticker}`}
+        >
+          <div className="flex gap-3 items-center">
+            <img
+              className="w-8 h-8 rounded-full"
+              src={balance.assetType.icon}
+            />
+            <div>
+              <div className="text-fourth">{balance.assetType.ticker}</div>
+              <div className="text-secondary">
+                {balance.privateBalance.toString()}
+              </div>
+            </div>
+          </div>
+          <div className="text-fourth">
+            {usdPrices[balance.assetType.baseTicker]
+              ? balance.usdBalanceString
+              : '$0.00'}
+          </div>
+        </div>
+      ));
+    } else {
+      return (
+        <div className="whitespace-nowrap text-center">
+          You have no zkAssets yet.
+        </div>
+      );
+    }
+  };
 
   return (
-    <div
-      style={{
-        width: '450px'
-      }}
-      className="mt-3 bg-secondary rounded-3xl p-6 absolute right-0 top-full z-50 border border-manta-gray text-secondary"
-    >
-      {balanceFetching ? (
-        <ZkAccountModalSkeleton />
-      ) : (
-        <>
-          <div className="border border-secondary rounded-lg px-6 py-4 mb-5 text-secondary">
-            {privateAddress ? (
-              <>
-                <div className="flex items-center justify-center gap-5">
-                  <div className="flex items-center gap-5">
-                    <img className="w-10 h-10" src={MantaIcon} alt="Manta" />
-                    <span>
-                      {privateAddress.slice(0, 10)}...
-                      {privateAddress.slice(-10)}
-                    </span>
-                  </div>
-                  <CopyPasteIcon textToCopy={privateAddress} />
-                </div>
-                <div className="mt-4 flex flex-col justify-center items-center">
-                  <span>Total Balance</span>
-                  <div className="text-black dark:text-white text-xl">
-                    {totalBalanceString}
-                  </div>
-                </div>
-              </>
-            ) : (
-              <div className="whitespace-nowrap text-center">
-                You have no zkAccount yet.
-              </div>
-            )}
-          </div>
-          {privateAddress ? (
-            <div className="border border-secondary rounded-lg px-6 py-4 mb-5 text-secondary">
-              {balances && balances.length > 0 ? (
-                balances.map((balance: any) => (
-                  <div
-                    className="flex items-center justify-between gap-2 mb-4"
-                    key={`balance-${balance.assetType.ticker}`}
-                  >
-                    <div className="flex items-center gap-4">
-                      <img
-                        className="w-10 h-10 rounded-full"
-                        src={balance.assetType.icon}
-                      />
-                      <div>
-                        <div className="text-black dark:text-white">
-                          {balance.assetType.ticker}
-                        </div>
-                        <div className="text-secondary">
-                          {balance.privateBalance.toString()}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="text-black dark:text-white">
-                      {usdPrices[balance.assetType.baseTicker]
-                        ? balance.usdBalanceString
-                        : ''}
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <div className="whitespace-nowrap text-center">
-                  You have no zkAssets yet.
-                </div>
-              )}
-            </div>
-          ) : null}
-        </>
-      )}
+    <div className="w-80 mt-3 bg-secondary rounded-lg p-4 absolute right-0 top-full z-50 border border-manta-gray text-secondary ">
+        <ZkAccountModalContent/>
     </div>
   );
 };
