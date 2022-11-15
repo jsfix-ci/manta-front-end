@@ -4,7 +4,7 @@ import OutsideClickHandler from 'react-outside-click-handler';
 import { usePrivateWallet } from 'contexts/privateWalletContext';
 import { useModal } from 'hooks';
 import ConnectSignerModal from 'components/Modal/connectSigner';
-import ZkAccountModal from '../ZkAccoutModal';
+import ZkAccountModal from '../Accounts/ZkAccountModal';
 
 const ZkAccountButton = () => {
   const [showZkModal, setShowZkModal] = useState(false);

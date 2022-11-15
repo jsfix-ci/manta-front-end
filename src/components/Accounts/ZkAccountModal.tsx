@@ -27,47 +27,57 @@ const AccountDisplay = () => {
   const [balances, setBalances] = useState<any>([]);
   const [totalBalanceString, setTotalBalanceString] = useState('$0.00');
 
+  const fetchPrivateBalanceHelper = async (assetType: any) => {
+    try {
+      let usdBalance = null;
+      const privateBalance = await getSpendableBalance(assetType);
+      if (privateBalance) {
+        const assetUsdValue = usdPrices[assetType.baseTicker] || new Decimal(0);
+        usdBalance = privateBalance.toUsd(assetUsdValue);
+        const usdBalanceString = usdBalance.toUsdString();
+
+        return {
+          assetType,
+          usdBalance,
+          usdBalanceString,
+          privateBalance
+        };
+      }
+
+      return {
+        assetType,
+        usdBalance,
+        usdBalanceString: '$0.00',
+        privateBalance
+      };
+    } catch (err) {
+      return {
+        assetType,
+        usdBalance: null,
+        usdBalanceString: '',
+        privateBalance: null
+      };
+    }
+  };
+
   const fetchPrivateBalances = async () => {
     let totalUsd = new Usd(new Decimal(0));
-    const updateBalances = await Promise.all(
+    const updatedBalances = await Promise.all(
       assets.map(async (assetType: any) => {
-        try {
-          const privateBalance = await getSpendableBalance(assetType);
-          if (privateBalance) {
-            const assetUsdValue =
-              usdPrices[assetType.baseTicker] || new Decimal(0);
-            const usdBalance = privateBalance.toUsd(assetUsdValue);
-            const usdBalanceString = usdBalance.toUsdString();
-            totalUsd.add(usdBalance.value);
-
-            return {
-              assetType,
-              usdBalanceString,
-              privateBalance
-            };
-          }
-
-          return {
-            assetType,
-            usdBalanceString: '$0.00',
-            privateBalance
-          };
-        } catch (err) {
-          return {
-            assetType,
-            usdBalanceString: '',
-            privateBalance: null
-          };
-        }
+        const fetchPrivateBalanceRes = await fetchPrivateBalanceHelper(assetType);
+        fetchPrivateBalanceRes.usdBalance &&
+          totalUsd.add(fetchPrivateBalanceRes.usdBalance.value);
+        return fetchPrivateBalanceRes;
       })
     );
 
-    const newBalance = updateBalances.filter(
-      (balance) =>
-        balance.privateBalance &&
-        balance.privateBalance.gt(new Balance(balance.assetType, new BN(0)))
-    );
-    setBalances(newBalance);
+    setBalances([
+      ...updatedBalances.filter(
+        (balance) =>
+          balance.privateBalance &&
+          balance.privateBalance.gt(new Balance(balance.assetType, new BN(0)))
+      )
+    ]);
     setTotalBalanceString(totalUsd.toUsdString());
   };
 
