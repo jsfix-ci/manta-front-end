@@ -48,7 +48,7 @@ export default class Balance {
     return valueBaseUnits;
   }
 
-  toString(shouldFormat, decimals = 3) {
+  toString(shouldFormat = false, decimals = 3) {
     return !shouldFormat
       ? this.valueBaseUnits().toDecimalPlaces(decimals, Decimal.ROUND_DOWN).toString()
       : `${this.valueBaseUnits()

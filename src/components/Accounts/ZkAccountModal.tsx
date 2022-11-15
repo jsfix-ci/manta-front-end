@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React, { useEffect, useState } from 'react';
 import BN from 'bn.js';
 import Decimal from 'decimal.js';
@@ -24,7 +25,7 @@ const AccountDisplay = () => {
   const { usdPrices } = useUsdPrices();
 
   const assets = AssetType.AllCurrencies(true);
-  const [balances, setBalances] = useState<any>([]);
+  const [balances, setBalances] = useState([]);
   const [totalBalanceString, setTotalBalanceString] = useState('$0.00');
 
   const fetchPrivateBalanceHelper = async (assetType: any) => {
@@ -64,7 +65,9 @@ const AccountDisplay = () => {
     let totalUsd = new Usd(new Decimal(0));
     const updatedBalances = await Promise.all(
       assets.map(async (assetType: any) => {
-        const fetchPrivateBalanceRes = await fetchPrivateBalanceHelper(assetType);
+        const fetchPrivateBalanceRes = await fetchPrivateBalanceHelper(
+          assetType
+        );
         fetchPrivateBalanceRes.usdBalance &&
           totalUsd.add(fetchPrivateBalanceRes.usdBalance.value);
         return fetchPrivateBalanceRes;
@@ -136,31 +139,31 @@ const AccountDisplay = () => {
     }
   };
 
-  const PrivateTokenTableContent = () => {
-    if (balances && balances.length > 0) {
-      return balances.map((balance: any) => (
-        <div
-          className="flex items-center justify-between mb-2"
-          key={`balance-${balance.assetType.ticker}`}
-        >
-          <div className="flex gap-3 items-center">
-            <img
-              className="w-8 h-8 rounded-full"
-              src={balance.assetType.icon}
-            />
-            <div>
-              <div className="text-fourth">{balance.assetType.ticker}</div>
-              <div className="text-secondary">
-                {balance.privateBalance.toString()}
-              </div>
+  const PrivateTokenItem = ({ balance }) => {
+    return (
+      <div className="flex items-center justify-between mb-2">
+        <div className="flex gap-3 items-center">
+          <img className="w-8 h-8 rounded-full" src={balance.assetType.icon} />
+          <div>
+            <div className="text-fourth">{balance.assetType.ticker}</div>
+            <div className="text-secondary">
+              {balance.privateBalance.toString()}
             </div>
           </div>
-          <div className="text-fourth">
-            {usdPrices[balance.assetType.baseTicker]
-              ? balance.usdBalanceString
-              : '$0.00'}
-          </div>
         </div>
+        <div className="text-fourth">
+          {usdPrices[balance.assetType.baseTicker]
+            ? balance.usdBalanceString
+            : '$0.00'}
+        </div>
+      </div>
+    );
+  };
+
+  const PrivateTokenTableContent = () => {
+    if (balances && balances.length > 0) {
+      return balances.map((balance, index) => (
+        <PrivateTokenItem balance={balance} key={balance.assetType.assetId} />
       ));
     } else {
       return (
