@@ -280,7 +280,7 @@ export const SendContextProvider = (props) => {
       fetchSenderBalance();
       fetchReceiverBalance();
       fetchFeeBalance();
-    }, 200);
+    }, 3000);
     return () => clearInterval(interval);
   }, [
     senderAssetType,
