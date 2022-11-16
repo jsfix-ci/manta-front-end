@@ -2,6 +2,7 @@
 import store from 'store';
 
 const LAST_ACCOUNT_STORAGE_KEY = 'lastAccessedExternalAccountAddress';
+const SAVED_KEYRING_ADDRESSES = 'savedKeyringAddresses'
 
 export const getLastAccessedExternalAccount = (config, keyring) => {
   const lastAccountAddress = store.get(
@@ -21,4 +22,18 @@ export const getLastAccessedExternalAccount = (config, keyring) => {
 export const setLastAccessedExternalAccountAddress = (config, lastAccount) => {
   store.set(
     `${config.BASE_STORAGE_KEY}${LAST_ACCOUNT_STORAGE_KEY}`, lastAccount);
+};
+
+// setter & getter for saved addresses of last externalAccountOptions 
+export const getSavedKeyringAddresses = (config) => {
+  return store.get(
+    `${config.BASE_STORAGE_KEY}${SAVED_KEYRING_ADDRESSES}`
+  )
+};
+
+export const setSavedKeyringAddresses = (config, keyringAddresses) => {
+  store.set(
+    `${config.BASE_STORAGE_KEY}${SAVED_KEYRING_ADDRESSES}`,
+    keyringAddresses
+  );
 };

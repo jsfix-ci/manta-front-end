@@ -2,6 +2,7 @@ import Dolphin from 'resources/images/dolphin.svg';
 import Calamari from 'resources/images/calamari.png';
 import Manta from 'resources/images/manta.png';
 import Talisman from 'resources/icons/talisman.svg';
+import Metamask from 'resources/icons/metamask.svg';
 // coin icons
 import BitcoinIcon from 'resources/icons/coins/bitcoin-icon.svg';
 import EtheriumIcon from 'resources/icons/coins/etherium-icon.svg';
@@ -121,7 +122,8 @@ const Svgs = {
   LeftIcon,
   RightIcon,
   ShieldIcon,
-  Talisman
+  Talisman,
+  Metamask
 };
 
 export default Svgs;
