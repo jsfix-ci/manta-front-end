@@ -25,7 +25,7 @@ export const UsdPricesContextProvider = (props) => {
 
       if (res.data) {
         const prices = {};
-        assets.map((asset) => {
+        assets.forEach((asset) => {
           prices[asset.baseTicker] = res.data[asset.coingeckoId]
             ? new Decimal(res.data[asset.coingeckoId]['usd'])
             : null;
