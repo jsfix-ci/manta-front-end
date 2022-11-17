@@ -2,12 +2,15 @@
 import APP_NAME from 'constants/AppConstants';
 import PropTypes from 'prop-types';
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { getHasAuthToConnectStorage } from 'utils/persistence/connectAuthorizationStorage';
-import {
-  web3Accounts,
-  web3AccountsSubscribe,
-  web3Enable
-} from '@polkadot/extension-dapp';
+import { 
+  getHasAuthToConnectPolkadotStorage,
+  getHasAuthToConnectTalismanStorage,
+  getHasAuthToConnectSubwalletStorage,
+  setHasAuthToConnectPolkadotStorage,
+  setHasAuthToConnectTalismanStorage,
+  setHasAuthToConnectSubwalletStorage, 
+} from 'utils/persistence/connectAuthorizationStorage';
+
 import {
   getSavedKeyringAddresses,
   setSavedKeyringAddresses
@@ -24,24 +27,26 @@ export const KeyringContextProvider = (props) => {
   const [isKeyringInit, setIsKeyringInit] = useState(false);
   const [keyringAddresses, setKeyringAddresses] = useState([]);
   const [web3ExtensionInjected, setWeb3ExtensionInjected] = useState([]);
-  const [hasAuthToConnectWallet, setHasAuthToConnectWallet] = useState(
-    getHasAuthToConnectStorage()
-  );
   const [selectedWallet, setSelectedWallet] = useState(null);
 
   const [hasAuthToConnectPolkadot, setHasAuthToConnectPolkadot] =
-    useState(false);
+    useState(getHasAuthToConnectPolkadotStorage());
   const [hasAuthToConnectTalisman, setHasAuthToConnectTalisman] =
-    useState(false);
+    useState(getHasAuthToConnectTalismanStorage());
   const [hasAuthToConnectSubwallet, setHasAuthToConnectSubwallet] =
-    useState(false);
+    useState(getHasAuthToConnectSubwalletStorage());
+
+  const hasAuthToConnectAnyWallet = hasAuthToConnectPolkadot || hasAuthToConnectTalisman || hasAuthToConnectSubwallet;
 
   const connectWalletExtension = (extensionName) => {
     if (extensionName === 'talisman') {
+      setHasAuthToConnectTalismanStorage(true);
       setHasAuthToConnectTalisman(true);
     } else if (extensionName === 'polkadot-js') {
+      setHasAuthToConnectPolkadotStorage(true)
       setHasAuthToConnectPolkadot(true);
     } else if (extensionName === 'subwallet-js') {
+      setHasAuthToConnectSubwalletStorage(true)
       setHasAuthToConnectSubwallet(true);
     }
   };
@@ -107,7 +112,7 @@ export const KeyringContextProvider = (props) => {
   const initKeyring = async () => {
     let unsubscribe = () => {};
     if (
-      hasAuthToConnectWallet &&
+      hasAuthToConnectAnyWallet &&
       !isKeyringInit &&
       web3ExtensionInjected.length !== 0
     ) {
@@ -125,13 +130,16 @@ export const KeyringContextProvider = (props) => {
 
   useEffect(() => {
     return initKeyring();
-  }, [hasAuthToConnectWallet]);
+  }, [hasAuthToConnectAnyWallet]);
 
   useEffect(() => {
     triggerInitKeyringWhenWeb3ExtensionsInjected();
   }, [waitExtensionCounter]);
 
   useEffect(() => {
+    if (!isKeyringInit) {
+      return
+    }
     const substrateWallets = getWallets();
     const talismanWallet = substrateWallets.find(
       (wallet) => wallet.extensionName === 'talisman'
@@ -143,7 +151,11 @@ export const KeyringContextProvider = (props) => {
       (wallet) => wallet.extensionName === 'subwallet-js'
     );
 
-    if (hasAuthToConnectTalisman && !talismanWallet.extension) {
+    if (hasAuthToConnectSubwallet && !subwalletWallet.extension) {
+      subwalletWallet
+        .enable(APP_NAME)
+        .then(() => subscribeWalletAccounts(subwalletWallet));
+    } else if (hasAuthToConnectTalisman && !talismanWallet.extension) {
       talismanWallet
         .enable(APP_NAME)
         .then(() => subscribeWalletAccounts(talismanWallet));
@@ -151,22 +163,13 @@ export const KeyringContextProvider = (props) => {
       polkadotWallet
         .enable(APP_NAME)
         .then(() => subscribeWalletAccounts(polkadotWallet));
-    } else if (hasAuthToConnectSubwallet && !subwalletWallet.extension) {
-      subwalletWallet
-        .enable(APP_NAME)
-        .then(() => subscribeWalletAccounts(subwalletWallet));
     }
-  }, [
-    hasAuthToConnectTalisman,
-    hasAuthToConnectPolkadot,
-    hasAuthToConnectSubwallet
-  ]);
+  }, [initKeyring, hasAuthToConnectTalisman, hasAuthToConnectPolkadot, hasAuthToConnectSubwallet]);
 
   const value = {
     keyring: keyring, // keyring object would not change even if properties changed
     isKeyringInit: isKeyringInit,
     keyringAddresses: keyringAddresses, //keyring object would not change so use keyringAddresses to trigger re-render
-    setHasAuthToConnectWallet: setHasAuthToConnectWallet,
     web3ExtensionInjected: web3ExtensionInjected,
     connectWalletExtension: connectWalletExtension,
     subscribeWalletAccounts: subscribeWalletAccounts,

@@ -10,6 +10,7 @@ const MetamaskContext = createContext();
 export const MetamaskContextProvider = (props) => {
   const config = useConfig();
   const [provider, setProvider] = useState(null);
+  const [hasAuthConnectMetamask, setHasAuthConnectMetamask] = useState(false)
   const ethAddress = provider?.selectedAddress;
 
   const configureMoonRiver = async () => {
@@ -26,24 +27,24 @@ export const MetamaskContextProvider = (props) => {
 
   useEffect(() => {
     const detectMetamask = async () => {
-      if (!provider) {
+
+      if (!provider && hasAuthConnectMetamask) {
         const metamask = await detectEthereumProvider({ mustBeMetaMask: true });
         if (metamask) {
           setProvider(metamask);
-        } else {
-          setProvider(false);
         }
       }
     };
     detectMetamask();
-  });
+  }, [hasAuthConnectMetamask]);
 
 
   const value = {
     provider,
     setProvider,
     ethAddress,
-    configureMoonRiver
+    configureMoonRiver,
+    setHasAuthConnectMetamask
   };
 
   return (

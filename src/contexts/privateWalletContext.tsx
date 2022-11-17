@@ -83,7 +83,8 @@ export const PrivateWalletContextProvider = (props) => {
     };
 
     const initWallet = async () => {
-      console.log('INITIALIZING WALLET');
+      // (BD Todo comment back)
+      // console.log('INITIALIZING WALLET');
       isInitialSync.current = true;
       const wasm = await import('manta-wasm-wallet');
       const wasmSigner = new wasm.Signer(config.SIGNER_URL);
@@ -96,13 +97,13 @@ export const PrivateWalletContextProvider = (props) => {
       const wasmWallet = new wasm.Wallet(wasmLedger, wasmSigner);
       const privateAddress = await getPrivateAddress(wasm, wasmWallet);
       setPrivateAddress(privateAddress);
-      console.log('Beginning initial sync');
+      // console.log('Beginning initial sync');
       const startTime = performance.now();
       await wasmWallet.restart();
       const endTime = performance.now();
-      console.log(
-        `Initial sync finished in ${(endTime - startTime) / 1000} seconds`
-      );
+      // console.log(
+      //   `Initial sync finished in ${(endTime - startTime) / 1000} seconds`
+      // );
       setWasm(wasm);
       setWasmApi(wasmApi);
       setWallet(wasmWallet);
@@ -115,12 +116,12 @@ export const PrivateWalletContextProvider = (props) => {
   }, [api, externalAccountSigner, signerIsConnected, signerVersion]);
 
   const fetchSignerVersion = async () => {
-    console.log('fetchSignerVersion', fetchSignerVersion)
+    // console.log('fetchSignerVersion', fetchSignerVersion)
     try {
       const res = await axios.get(`${config.SIGNER_URL}version`, {
         timeout: 1500
       });
-      console.log('res', res);
+      // console.log('res', res);
       const signerVersion = res.data;
       const signerIsConnected = !!signerVersion;
       setSignerIsConnected(signerIsConnected);
@@ -169,11 +170,11 @@ export const PrivateWalletContextProvider = (props) => {
     }
     walletIsBusy.current = true;
     try {
-      console.log('Beginning sync');
+      // console.log('Beginning sync');
       const startTime = performance.now();
       await wallet.sync();
       const endTime = performance.now();
-      console.log(`Sync finished in ${(endTime - startTime) / 1000} seconds`);
+      // console.log(`Sync finished in ${(endTime - startTime) / 1000} seconds`);
       balancesAreStale.current = false;
     } catch (error) {
       console.error('Sync failed', error);
@@ -205,11 +206,11 @@ export const PrivateWalletContextProvider = (props) => {
         if (api.events.utility.BatchInterrupted.is(event.event)) {
           setTxStatus(TxStatus.failed());
           txQueue.current = [];
-          console.error('Internal transaction failed', event);
+          // console.error('Internal transaction failed', event);
         }
       }
     } else if (status.isFinalized) {
-      console.log('Internal transaction finalized');
+      // console.log('Internal transaction finalized');
       await publishNextBatch();
     }
   };

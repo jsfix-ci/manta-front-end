@@ -47,15 +47,16 @@ export const SendContextProvider = (props) => {
 
   // Adds the user's polkadot.js accounts to state on pageload
   // These populate public address select dropdowns in the ui
-  useEffect(() => {
-    const initPublicAccountOptions = () => {
-      dispatch({
-        type: SEND_ACTIONS.SET_SENDER_PUBLIC_ACCOUNT_OPTIONS,
-        senderPublicAccountOptions: externalAccountOptions
-      });
-    };
-    initPublicAccountOptions();
-  }, [externalAccountOptions]);
+  // (BD Todo)
+  // useEffect(() => {
+  //   const initPublicAccountOptions = () => {
+  //     dispatch({
+  //       type: SEND_ACTIONS.SET_SENDER_PUBLIC_ACCOUNT_OPTIONS,
+  //       senderPublicAccountOptions: externalAccountOptions
+  //     });
+  //   };
+  //   initPublicAccountOptions();
+  // }, [externalAccountOptions]);
 
   // Adds the user's default private address to state on pageload
   useEffect(() => {
@@ -121,7 +122,7 @@ export const SendContextProvider = (props) => {
     receiverAddress,
     senderAssetType,
     receiverAssetType,
-    externalAccountOptions
+    // (BD Todo) externalAccountOptions
   ]);
 
   /**
