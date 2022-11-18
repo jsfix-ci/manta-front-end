@@ -4,14 +4,17 @@ import PropTypes from 'prop-types';
 import detectEthereumProvider from '@metamask/detect-provider';
 import Chain from 'types/Chain';
 import { useConfig } from './configContext';
+import { getHasAuthToConnectMetamaskStorage } from 'utils/persistence/connectAuthorizationStorage';
 
 const MetamaskContext = createContext();
 
 export const MetamaskContextProvider = (props) => {
   const config = useConfig();
   const [provider, setProvider] = useState(null);
-  const [hasAuthConnectMetamask, setHasAuthConnectMetamask] = useState(false)
   const ethAddress = provider?.selectedAddress;
+
+  const [hasAuthConnectMetamask, setHasAuthConnectMetamask] = useState(false)
+  const [isMetamaskSelected, setIsMetamaskSelected] = useState(false);
 
   const configureMoonRiver = async () => {
     try {
@@ -36,7 +39,7 @@ export const MetamaskContextProvider = (props) => {
       }
     };
     detectMetamask();
-  }, [hasAuthConnectMetamask]);
+  });
 
 
   const value = {
@@ -44,7 +47,9 @@ export const MetamaskContextProvider = (props) => {
     setProvider,
     ethAddress,
     configureMoonRiver,
-    setHasAuthConnectMetamask
+    setHasAuthConnectMetamask,
+    isMetamaskSelected,
+    setIsMetamaskSelected
   };
 
   return (

@@ -54,9 +54,9 @@ const ConnectWalletBlock = ({
   }
 };
 
-const ConnectWalletModal = ({setIsMetamaskSelected}) => {
+const ConnectWalletModal = () => {
   const { connectWalletExtension } = useKeyring();
-  const { setHasAuthConnectMetamask, ethAddress } = useMetamask();
+  const { setHasAuthConnectMetamask, ethAddress, setIsMetamaskSelected } = useMetamask();
 
   const onSubstrateWalletConnectHandler = (walletName) => () => {
     connectWalletExtension(walletName)
