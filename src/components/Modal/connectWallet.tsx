@@ -68,7 +68,7 @@ const ConnectWalletModal = () => {
       setHasAuthToConnectMetamaskStorage(true);
       setHasAuthConnectMetamask(true)
     } else {
-      provider.request({ method: 'eth_requestAccounts' });
+      provider?.request({ method: 'eth_requestAccounts' });
     }
   }
   return (
