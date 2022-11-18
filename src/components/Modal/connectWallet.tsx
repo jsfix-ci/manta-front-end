@@ -4,6 +4,7 @@ import { getWallets } from '@talismn/connect-wallets';
 import { useKeyring } from 'contexts/keyringContext';
 import { useMetamask } from 'contexts/metamaskContext';
 import Svgs from 'resources/icons';
+import { setHasAuthToConnectMetamaskStorage } from 'utils/persistence/connectAuthorizationStorage';
 
 const ConnectWalletBlock = ({
   walletName,
@@ -56,14 +57,19 @@ const ConnectWalletBlock = ({
 
 const ConnectWalletModal = () => {
   const { connectWalletExtension } = useKeyring();
-  const { setHasAuthConnectMetamask, ethAddress, setIsMetamaskSelected } = useMetamask();
+  const { setHasAuthConnectMetamask, ethAddress, setIsMetamaskSelected, provider } = useMetamask();
 
   const onSubstrateWalletConnectHandler = (walletName) => () => {
     connectWalletExtension(walletName)
     setIsMetamaskSelected && setIsMetamaskSelected(false)
   }
   const onEvmWalletConnecthandler = () => {
-    setHasAuthConnectMetamask(true)
+    if (ethAddress) {
+      setHasAuthToConnectMetamaskStorage(true);
+      setHasAuthConnectMetamask(true)
+    } else {
+      provider.request({ method: 'eth_requestAccounts' });
+    }
   }
   return (
     <div className="p-4 w-96">

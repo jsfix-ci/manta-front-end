@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useConfig } from 'contexts/configContext';
 import { useMetamask } from 'contexts/metamaskContext';
 import { useExternalAccount } from 'contexts/externalAccountContext';
@@ -14,17 +14,23 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const copyToClipboard = (
   address: string,
-  index: number,
-  setAddressCopied: () => boolean
 ) => {
   navigator.clipboard.writeText(address);
-  setAddressCopied(index);
   return false;
 };
 
 const AvaliableMetamaskAccounts = () => {
   const { ethAddress } = useMetamask();
+  const { externalAccount } = useExternalAccount();
   const [addressCopied, setAddressCopied] = useState(-1);
+
+  useEffect(() => {
+    const timer = setTimeout(
+      () => addressCopied && setAddressCopied(-1),
+      1500
+    );
+    return () => clearTimeout(timer);
+  }, [addressCopied]);
 
   return (
     <div
@@ -33,7 +39,7 @@ const AvaliableMetamaskAccounts = () => {
     >
       <div>
         <div className="text-sm flex flex-row items-center gap-3">
-          <img src={Svgs.Metamask} alt={'metamask'} className="w-8 h-8" />
+          <Identicon value={externalAccount.address} size={32} theme="polkadot" />
           <div className="flex flex-col gap-1">
             <div className="font-medium">{'Metamask Account'}</div>
             <div className="flex flex-row items-center gap-2">
@@ -49,7 +55,7 @@ const AvaliableMetamaskAccounts = () => {
                   icon={faArrowUpRightFromSquare}
                 />
               </a>
-              {addressCopied === 999 ? (
+              {addressCopied === 1 ? (
                 <FontAwesomeIcon icon={faCheck} />
               ) : (
                 <FontAwesomeIcon
@@ -57,8 +63,8 @@ const AvaliableMetamaskAccounts = () => {
                   icon={faCopy}
                   onClick={(e) => {
                     e.stopPropagation();
-                    copyToClipboard(ethAddress, 999, setAddressCopied);
-                    // (BD todo) use settimeout is better
+                    copyToClipboard(ethAddress);
+                    setAddressCopied(1);
                   }}
                 />
               )}
@@ -80,10 +86,19 @@ const AvaliableMetamaskAccounts = () => {
 const AvaliableSubstrateAccounts = () => {
   const config = useConfig();
   const [addressCopied, setAddressCopied] = useState(-1);
-  const { externalAccount, externalAccountOptions, changeExternalAccount } = useExternalAccount();
+  const { externalAccount, externalAccountOptions, changeExternalAccount } =
+    useExternalAccount();
 
   const getBlockExplorerLink = (address) =>
     `${config.SUBSCAN_URL}/account/${address}`;
+
+  useEffect(() => {
+    const timer = setTimeout(
+      () => addressCopied && setAddressCopied(-1),
+      1500
+    );
+    return () => clearTimeout(timer);
+  }, [addressCopied]);
 
   return externalAccountOptions.map((account: any, index: number) => (
     <div
@@ -91,7 +106,6 @@ const AvaliableSubstrateAccounts = () => {
       className="hover:bg-thirdry cursor-pointer flex items-center gap-5 justify-between border border-secondary rounded-lg px-3 py-2 mb-5 text-secondary"
       onClick={() => {
         changeExternalAccount(account, externalAccountOptions);
-        // BD todo (setShowAccountList(false);)
       }}
     >
       <div>
@@ -121,7 +135,8 @@ const AvaliableSubstrateAccounts = () => {
                   icon={faCopy}
                   onClick={(e) => {
                     e.stopPropagation();
-                    copyToClipboard(account.address, index, setAddressCopied);
+                    copyToClipboard(account.address);
+                    setAddressCopied(index)
                   }}
                 />
               )}

@@ -42,7 +42,6 @@ const WalletSelectIconBar = () => {
     <button
       key={'metamask'}
       onClick={() => {
-        // (BD todo) switch to Metamask
         setIsMetamaskSelected(true);
       }}
     >

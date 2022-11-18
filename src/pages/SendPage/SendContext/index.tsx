@@ -47,7 +47,8 @@ export const SendContextProvider = (props) => {
 
   // Adds the user's polkadot.js accounts to state on pageload
   // These populate public address select dropdowns in the ui
-  // (BD Todo)
+  
+  // (BD Todo Ask kevin)
   // useEffect(() => {
   //   const initPublicAccountOptions = () => {
   //     dispatch({
@@ -122,7 +123,7 @@ export const SendContextProvider = (props) => {
     receiverAddress,
     senderAssetType,
     receiverAssetType,
-    // (BD Todo) externalAccountOptions
+    // (BD Todo Ask kevin) externalAccountOptions
   ]);
 
   /**

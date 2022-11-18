@@ -11,36 +11,50 @@ const MetamaskContext = createContext();
 export const MetamaskContextProvider = (props) => {
   const config = useConfig();
   const [provider, setProvider] = useState(null);
-  const ethAddress = provider?.selectedAddress;
-
-  const [hasAuthConnectMetamask, setHasAuthConnectMetamask] = useState(false)
+  const [ethAddress, setEthAddress] = useState(null);
   const [isMetamaskSelected, setIsMetamaskSelected] = useState(false);
+  const [hasAuthConnectMetamask, setHasAuthConnectMetamask] = useState(getHasAuthToConnectMetamaskStorage());
 
   const configureMoonRiver = async () => {
     try {
-      await provider.request({ method: 'eth_requestAccounts'});
+      await provider.request({ method: 'eth_requestAccounts' });
       await provider.request({
         method: 'wallet_addEthereumChain',
         params: [Chain.Moonriver(config).ethMetadata]
       });
-    } catch(e) {
+    } catch (e) {
       console.error(e);
     }
   };
 
   useEffect(() => {
     const detectMetamask = async () => {
-
-      if (!provider && hasAuthConnectMetamask) {
-        const metamask = await detectEthereumProvider({ mustBeMetaMask: true });
-        if (metamask) {
-          setProvider(metamask);
+      if (hasAuthConnectMetamask) {
+        if (!provider) {
+          const metamask = await detectEthereumProvider({
+            mustBeMetaMask: true
+          });
+          if (metamask) {
+            setProvider(metamask);
+            // check metamask locked 
+            if (metamask?.selectedAddress) {
+              setEthAddress(metamask.selectedAddress);
+            }
+          }
+        } else {
+          // check metamask locked 
+          if (provider?.selectedAddress) {
+            setEthAddress(provider.selectedAddress);
+          }
         }
       }
     };
-    detectMetamask();
-  });
 
+    const interval = setInterval(async () => {
+      detectMetamask();
+    }, 2000);
+    return () => clearInterval(interval);
+  });
 
   const value = {
     provider,
@@ -60,9 +74,9 @@ export const MetamaskContextProvider = (props) => {
 };
 
 MetamaskContextProvider.propTypes = {
-  children: PropTypes.any,
+  children: PropTypes.any
 };
 
 export const useMetamask = () => ({
-  ...useContext(MetamaskContext),
+  ...useContext(MetamaskContext)
 });

@@ -83,8 +83,7 @@ export const PrivateWalletContextProvider = (props) => {
     };
 
     const initWallet = async () => {
-      // (BD Todo comment back)
-      // console.log('INITIALIZING WALLET');
+      console.log('INITIALIZING WALLET');
       isInitialSync.current = true;
       const wasm = await import('manta-wasm-wallet');
       const wasmSigner = new wasm.Signer(config.SIGNER_URL);
@@ -97,13 +96,13 @@ export const PrivateWalletContextProvider = (props) => {
       const wasmWallet = new wasm.Wallet(wasmLedger, wasmSigner);
       const privateAddress = await getPrivateAddress(wasm, wasmWallet);
       setPrivateAddress(privateAddress);
-      // console.log('Beginning initial sync');
+      console.log('Beginning initial sync');
       const startTime = performance.now();
       await wasmWallet.restart();
       const endTime = performance.now();
-      // console.log(
-      //   `Initial sync finished in ${(endTime - startTime) / 1000} seconds`
-      // );
+      console.log(
+        `Initial sync finished in ${(endTime - startTime) / 1000} seconds`
+      );
       setWasm(wasm);
       setWasmApi(wasmApi);
       setWallet(wasmWallet);
@@ -116,12 +115,12 @@ export const PrivateWalletContextProvider = (props) => {
   }, [api, externalAccountSigner, signerIsConnected, signerVersion]);
 
   const fetchSignerVersion = async () => {
-    // console.log('fetchSignerVersion', fetchSignerVersion)
+    console.log('fetchSignerVersion', fetchSignerVersion)
     try {
       const res = await axios.get(`${config.SIGNER_URL}version`, {
         timeout: 1500
       });
-      // console.log('res', res);
+      console.log('res', res);
       const signerVersion = res.data;
       const signerIsConnected = !!signerVersion;
       setSignerIsConnected(signerIsConnected);

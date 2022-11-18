@@ -204,7 +204,7 @@ export const BridgeDataContextProvider = (props) => {
     syncExternalAccountToSubstrateAccount();
   }, [
     senderAssetType,
-    // (BD Todo) externalAccountOptions
+    // (BD Todo Ask kevin) externalAccountOptions
   ]);
 
   /**
