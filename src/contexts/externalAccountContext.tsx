@@ -29,21 +29,6 @@ export const ExternalAccountContextProvider = (props) => {
   const [externalAccountOptions, setExternalAccountOptions] = useState([]);
   const [isInitialAccountSet, setIsInitialAccountSet] = useState(false);
 
-  // ensure externalAccount is the first item of externalAccountOptions
-  const orderExternalAccountOptions = (
-    selectedAccount,
-    externalAccountOptions
-  ) => {
-    let orderedExternalAccountOptions = [];
-    orderedExternalAccountOptions.push(selectedAccount);
-    externalAccountOptions.forEach((account) => {
-      if (account.address !== selectedAccount.address) {
-        orderedExternalAccountOptions.push(account);
-      }
-    });
-    return orderedExternalAccountOptions;
-  };
-
   const setSignerOnChangeExternalAccount = async (account) => {
     if (!account) return;
     const {
@@ -52,14 +37,12 @@ export const ExternalAccountContextProvider = (props) => {
     // signer is from Polkadot-js browser extension
 
     const extensions = await web3Enable(APP_NAME);
-    const extensionNames = extensions.map(ext => ext.name);
+    const extensionNames = extensions.map((ext) => ext.name);
     if (isInjected && extensionNames.includes(source)) {
       const injected = await web3FromSource(source);
       api.setSigner(injected.signer);
     }
-    const signer = account.meta.isInjected
-      ? account.address
-      : account;
+    const signer = account.meta.isInjected ? account.address : account;
     setExternalAccountSigner(signer);
   };
 
@@ -67,10 +50,10 @@ export const ExternalAccountContextProvider = (props) => {
     if (keyringAddresses.length > 0) {
       // reset state if account(s) exist after disable selected external account
       const externalAccountOptions = keyring.getPairs();
-      changeExternalAccount(externalAccountOptions[0], externalAccountOptions);
+      changeExternalAccountOptions(externalAccountOptions[0], externalAccountOptions);
     } else {
       // reset state if no account exist after disable selected external account
-      changeExternalAccount(null, []);
+      changeExternalAccountOptions(null, []);
       setExternalAccountSigner(null);
       setExternalAccountOptions([]);
     }
@@ -90,7 +73,7 @@ export const ExternalAccountContextProvider = (props) => {
         let initialAccount =
           getLastAccessedExternalAccount(config, keyring) ||
           externalAccountOptions[0];
-        changeExternalAccount(initialAccount, externalAccountOptions);
+        changeExternalAccountOptions(initialAccount, externalAccountOptions);
         setIsInitialAccountSet(true);
       }
     };
@@ -103,7 +86,7 @@ export const ExternalAccountContextProvider = (props) => {
       // ensure newly added account after removing all accounts can be updated
       if (!externalAccount) {
         const accounts = keyring.getPairs();
-        changeExternalAccount(accounts[0], accounts);
+        changeExternalAccountOptions(accounts[0], accounts);
         return;
       }
 
@@ -118,10 +101,35 @@ export const ExternalAccountContextProvider = (props) => {
     handleKeyringAddressesChange();
   }, [isInitialAccountSet, keyringAddresses]);
 
-  const changeExternalAccount = async (account, externalAccounts) => {
+  // ensure externalAccount is the first item of externalAccountOptions
+  const orderExternalAccountOptions = (
+    selectedAccount,
+    externalAccountOptions
+  ) => {
+    let orderedExternalAccountOptions = [];
+    orderedExternalAccountOptions.push(selectedAccount);
+    externalAccountOptions.forEach((account) => {
+      if (account.address !== selectedAccount.address) {
+        orderedExternalAccountOptions.push(account);
+      }
+    });
+    return orderedExternalAccountOptions;
+  };
+
+  const changeExternalAccount = async (account) => {
     setExternalAccount(account);
     setExternalAccountOptions(
-      orderExternalAccountOptions(account, externalAccounts)
+      orderExternalAccountOptions(account, externalAccountOptions)
+    );
+    setSignerOnChangeExternalAccount(account);
+    externalAccountRef.current = account;
+    setLastAccessedExternalAccountAddress(config, account?.address);
+  };
+
+  const changeExternalAccountOptions = async (account, newExternalAccounts) => {
+    setExternalAccount(account);
+    setExternalAccountOptions(
+      orderExternalAccountOptions(account, newExternalAccounts)
     );
     setSignerOnChangeExternalAccount(account);
     externalAccountRef.current = account;

@@ -9,7 +9,7 @@ import React, { useEffect, useState } from 'react';
 import OutsideClickHandler from 'react-outside-click-handler';
 import Svgs from 'resources/icons';
 import WalletSelectBar from './WalletSelectIconBar';
-import ConnectWalletButton from './ConnectWalletButton';
+import ConnectWallet from './ConnectWallet';
 import AccountSelectDropdown from './AccountSelectDropdown';
 
 const DisplayAccountsButton = () => {
@@ -21,6 +21,7 @@ const DisplayAccountsButton = () => {
   const { destinationChain, originChain } = useBridgeData();
   const [showAccountList, setShowAccountList] = useState(false);
   const [addressCopied, setAddressCopied] = useState(-1);
+  const [isMetamaskSelected, setIsMetamaskSelected] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(
@@ -57,20 +58,26 @@ const DisplayAccountsButton = () => {
           )}
           {externalAccount?.meta.name}
         </div>
-        {showAccountList ? (
+        {showAccountList && (
           <div className="flex flex-col gap-3 mt-3 bg-secondary rounded-xl p-6 pr-2 absolute right-0 top-full z-50 border border-manta-gray">
             <div className="text-lg font-medium text-black dark:text-white">
               Wallet
             </div>
             <div className="flex flex-row items-center gap-4 pl-2">
-              <WalletSelectBar />
-              <ConnectWalletButton isButton={false} />
+              <WalletSelectBar
+                isMetamaskSelected={isMetamaskSelected}
+                setIsMetamaskSelected={setIsMetamaskSelected}
+              />
+              <ConnectWallet
+                isButtonShape={false}
+                setIsMetamaskSelected={setIsMetamaskSelected}
+              />
             </div>
             <div className="max-h-96 overflow-y-auto pr-4">
-              <AccountSelectDropdown />
+              <AccountSelectDropdown isMetamaskSelected={isMetamaskSelected} />
             </div>
           </div>
-        ) : null}
+        )}
       </OutsideClickHandler>
     </div>
   );
@@ -82,7 +89,7 @@ const AccountSelectMenu = () => {
   return externalAccount ? (
     <DisplayAccountsButton />
   ) : (
-    <ConnectWalletButton isButton={true} />
+    <ConnectWallet isButtonShape={true} />
   );
 };
 

@@ -6,11 +6,10 @@ import classNames from 'classnames';
 import { getWallets } from '@talismn/connect-wallets';
 import { useKeyring } from 'contexts/keyringContext';
 import { useMetamask } from 'contexts/metamaskContext';
-import { setHasAuthToConnectMetamaskStorage } from 'utils/persistence/connectAuthorizationStorage';
 
-const WalletSelectIconBar = () => {
+const WalletSelectIconBar = ({ isMetamaskSelected, setIsMetamaskSelected }) => {
   const { subscribeWalletAccounts, selectedWallet } = useKeyring();
-  const { ethAddress, isMetamaskSelected, setIsMetamaskSelected } = useMetamask();
+  const { ethAddress } = useMetamask();
 
   const enabledWallet = getWallets().filter((wallet) => wallet.extension);
 

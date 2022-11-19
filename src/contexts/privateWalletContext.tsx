@@ -169,11 +169,11 @@ export const PrivateWalletContextProvider = (props) => {
     }
     walletIsBusy.current = true;
     try {
-      // console.log('Beginning sync');
+      console.log('Beginning sync');
       const startTime = performance.now();
       await wallet.sync();
       const endTime = performance.now();
-      // console.log(`Sync finished in ${(endTime - startTime) / 1000} seconds`);
+      console.log(`Sync finished in ${(endTime - startTime) / 1000} seconds`);
       balancesAreStale.current = false;
     } catch (error) {
       console.error('Sync failed', error);
@@ -205,11 +205,11 @@ export const PrivateWalletContextProvider = (props) => {
         if (api.events.utility.BatchInterrupted.is(event.event)) {
           setTxStatus(TxStatus.failed());
           txQueue.current = [];
-          // console.error('Internal transaction failed', event);
+          console.error('Internal transaction failed', event);
         }
       }
     } else if (status.isFinalized) {
-      // console.log('Internal transaction finalized');
+      console.log('Internal transaction finalized');
       await publishNextBatch();
     }
   };

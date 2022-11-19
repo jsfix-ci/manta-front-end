@@ -2,15 +2,15 @@
 import { useModal } from 'hooks';
 import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import ConnectWalletModal from 'components/Modal/connectWallet';
+import ConnectWalletModal from 'components/Modal/connectWalletModal';
 import Button from 'components/Button';
 
-const ConnectAccountButton = ({ isButton }) => {
+const ConnectWallet = ({ isButtonShape, setIsMetamaskSelected }) => {
   const { ModalWrapper, showModal } = useModal();
   const handleOnClick = () => showModal();
   return (
     <>
-      {isButton ? (
+      {isButtonShape ? (
         <Button
           className="btn-secondary rounded-lg relative z-10"
           onClick={handleOnClick}
@@ -25,11 +25,11 @@ const ConnectAccountButton = ({ isButton }) => {
         />
       )}
       <ModalWrapper>
-        <ConnectWalletModal />
+        <ConnectWalletModal setIsMetamaskSelected={setIsMetamaskSelected} />
       </ModalWrapper>
     </>
   );
 };
 
 
-export default ConnectAccountButton;
+export default ConnectWallet;

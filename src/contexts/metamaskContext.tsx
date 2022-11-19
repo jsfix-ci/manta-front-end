@@ -12,7 +12,6 @@ export const MetamaskContextProvider = (props) => {
   const config = useConfig();
   const [provider, setProvider] = useState(null);
   const [ethAddress, setEthAddress] = useState(null);
-  const [isMetamaskSelected, setIsMetamaskSelected] = useState(false);
   const [hasAuthConnectMetamask, setHasAuthConnectMetamask] = useState(getHasAuthToConnectMetamaskStorage());
 
   const configureMoonRiver = async () => {
@@ -61,9 +60,7 @@ export const MetamaskContextProvider = (props) => {
     setProvider,
     ethAddress,
     configureMoonRiver,
-    setHasAuthConnectMetamask,
-    isMetamaskSelected,
-    setIsMetamaskSelected
+    setHasAuthConnectMetamask
   };
 
   return (

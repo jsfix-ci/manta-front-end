@@ -12,21 +12,69 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-const copyToClipboard = (
-  address: string,
-) => {
-  navigator.clipboard.writeText(address);
-  return false;
-};
+const SingleAccountDisplay = ({
+  accountName,
+  accountAddress,
+  isAccountSelected,
+  isMetamaskSelected,
+  onClickAccountHandler
+}) => {
+  const config = useConfig();
+  const [addressCopied, setAddressCopied] = useState(null);
+  const succinctAddress = `${accountAddress?.slice(
+    0,
+    4
+  )}...${accountAddress?.slice(-5)}`;
 
-const AvaliableMetamaskAccounts = () => {
-  const { ethAddress } = useMetamask();
-  const { externalAccount } = useExternalAccount();
-  const [addressCopied, setAddressCopied] = useState(-1);
+  const blockExplorerLink = isMetamaskSelected
+    ? `https://etherscan.io/address/${accountAddress}`
+    : `${config.SUBSCAN_URL}/account/${accountAddress}`;
+
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(accountAddress);
+    return false;
+  };
+
+  const BlockExplorerButton = () => (
+    <a
+      onClick={(e) => e.stopPropagation()}
+      href={blockExplorerLink}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <FontAwesomeIcon
+        className="cursor-pointer"
+        icon={faArrowUpRightFromSquare}
+        href={blockExplorerLink}
+      />
+    </a>
+  );
+
+  const AddressCopyButton = () =>
+    addressCopied === accountAddress ? (
+      <FontAwesomeIcon icon={faCheck} />
+    ) : (
+      <FontAwesomeIcon
+        className="cursor-pointer"
+        icon={faCopy}
+        onClick={(e) => {
+          e.stopPropagation();
+          copyToClipboard(accountAddress);
+          setAddressCopied(accountAddress);
+        }}
+      />
+    );
+
+  const AccountIcon = () =>
+    isMetamaskSelected ? (
+      <img className="w-6 h-6" src={Svgs.Metamask} alt={'metamask'} />
+    ) : (
+      <Identicon value={accountAddress} size={32} theme="polkadot" />
+    );
 
   useEffect(() => {
     const timer = setTimeout(
-      () => addressCopied && setAddressCopied(-1),
+      () => addressCopied && setAddressCopied(null),
       1500
     );
     return () => clearTimeout(timer);
@@ -34,135 +82,58 @@ const AvaliableMetamaskAccounts = () => {
 
   return (
     <div
-      key={ethAddress}
-      className="hover:bg-thirdry cursor-pointer flex items-center gap-5 justify-between border border-secondary rounded-lg px-3 py-2 mb-5 text-secondary"
+      key={accountAddress}
+      className="hover:bg-thirdry cursor-pointer flex items-center gap-5 justify-between border border-secondary rounded-lg px-3 py-2 mb-5 text-green"
+      onClick={onClickAccountHandler}
     >
       <div>
         <div className="text-sm flex flex-row items-center gap-3">
-          <Identicon value={externalAccount.address} size={32} theme="polkadot" />
+          <AccountIcon />
           <div className="flex flex-col gap-1">
-            <div className="font-medium">{'Metamask Account'}</div>
+            <div className="font-medium">{accountName}</div>
             <div className="flex flex-row items-center gap-2">
-              {`${ethAddress?.slice(0, 4)}...${ethAddress?.slice(-5)}`}
-              <a
-                onClick={(e) => e.stopPropagation()}
-                href={`https://etherscan.io/address/${ethAddress}`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <FontAwesomeIcon
-                  className="cursor-pointer"
-                  icon={faArrowUpRightFromSquare}
-                />
-              </a>
-              {addressCopied === 1 ? (
-                <FontAwesomeIcon icon={faCheck} />
-              ) : (
-                <FontAwesomeIcon
-                  className="cursor-pointer"
-                  icon={faCopy}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    copyToClipboard(ethAddress);
-                    setAddressCopied(1);
-                  }}
-                />
-              )}
+              {succinctAddress}
+              <BlockExplorerButton />
+              <AddressCopyButton />
             </div>
           </div>
         </div>
       </div>
       <div className="py-1 px-6">
-        <FontAwesomeIcon
-          className="fa-xl"
-          icon={faCheck}
-          style={{ color: 'green' }}
-        />
+        {isAccountSelected && (
+          <FontAwesomeIcon icon={faCheck} className="fa-xl text-green-500" />
+        )}
       </div>
     </div>
   );
 };
 
-const AvaliableSubstrateAccounts = () => {
-  const config = useConfig();
-  const [addressCopied, setAddressCopied] = useState(-1);
+const AccountSelectDropdown = ({ isMetamaskSelected }) => {
+  const { ethAddress } = useMetamask();
   const { externalAccount, externalAccountOptions, changeExternalAccount } =
     useExternalAccount();
 
-  const getBlockExplorerLink = (address) =>
-    `${config.SUBSCAN_URL}/account/${address}`;
-
-  useEffect(() => {
-    const timer = setTimeout(
-      () => addressCopied && setAddressCopied(-1),
-      1500
-    );
-    return () => clearTimeout(timer);
-  }, [addressCopied]);
-
-  return externalAccountOptions.map((account: any, index: number) => (
-    <div
-      key={account.address}
-      className="hover:bg-thirdry cursor-pointer flex items-center gap-5 justify-between border border-secondary rounded-lg px-3 py-2 mb-5 text-secondary"
-      onClick={() => {
-        changeExternalAccount(account, externalAccountOptions);
-      }}
-    >
-      <div>
-        <div className="text-sm flex flex-row items-center gap-3">
-          <Identicon value={account.address} size={32} theme="polkadot" />
-          <div className="flex flex-col gap-1">
-            <div className="font-medium">{account.meta.name}</div>
-            <div className="flex flex-row items-center gap-2">
-              {`${account.address.slice(0, 4)}...${account.address.slice(-5)}`}
-              <a
-                onClick={(e) => e.stopPropagation()}
-                href={getBlockExplorerLink(account.address)}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <FontAwesomeIcon
-                  className="cursor-pointer"
-                  icon={faArrowUpRightFromSquare}
-                  href={getBlockExplorerLink(account.address)}
-                />
-              </a>
-              {addressCopied === index ? (
-                <FontAwesomeIcon icon={faCheck} />
-              ) : (
-                <FontAwesomeIcon
-                  className="cursor-pointer"
-                  icon={faCopy}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    copyToClipboard(account.address);
-                    setAddressCopied(index)
-                  }}
-                />
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="py-1 px-6">
-        {externalAccount.address === account.address && (
-          <FontAwesomeIcon
-            className="fa-xl"
-            icon={faCheck}
-            style={{ color: 'green' }}
-          />
-        )}
-      </div>
-    </div>
-  ));
-};
-
-const AccountSelectDropdown = () => {
-  const { isMetamaskSelected } = useMetamask();
   return isMetamaskSelected ? (
-    <AvaliableMetamaskAccounts />
+    <SingleAccountDisplay
+      accountName={'Metamask Account'}
+      accountAddress={ethAddress}
+      isAccountSelected={true}
+      isMetamaskSelected={isMetamaskSelected}
+      onClickAccountHandler={() => {}}
+    />
   ) : (
-    <AvaliableSubstrateAccounts />
+    externalAccountOptions.map((account: any) => (
+      <SingleAccountDisplay
+        key={account.address}
+        accountName={account.meta.name}
+        accountAddress={account.address}
+        isAccountSelected={account.address === externalAccount.address}
+        isMetamaskSelected={isMetamaskSelected}
+        onClickAccountHandler={() =>
+          changeExternalAccount(account)
+        }
+      />
+    ))
   );
 };
 

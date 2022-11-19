@@ -55,47 +55,64 @@ const ConnectWalletBlock = ({
   }
 };
 
-const ConnectWalletModal = () => {
-  const { connectWalletExtension } = useKeyring();
-  const { setHasAuthConnectMetamask, ethAddress, setIsMetamaskSelected, provider } = useMetamask();
+const MetamaskConnectWalletBlock = () => {
+  const { setHasAuthConnectMetamask, ethAddress, provider } = useMetamask();
 
-  const onSubstrateWalletConnectHandler = (walletName) => () => {
-    connectWalletExtension(walletName)
-    setIsMetamaskSelected && setIsMetamaskSelected(false)
-  }
   const onEvmWalletConnecthandler = () => {
     if (ethAddress) {
       setHasAuthToConnectMetamaskStorage(true);
-      setHasAuthConnectMetamask(true)
+      setHasAuthConnectMetamask(true);
     } else {
       provider?.request({ method: 'eth_requestAccounts' });
     }
-  }
+  };
+  return (
+    <ConnectWalletBlock
+      key={'metamask'}
+      walletName={'metamask'}
+      isWalletInstalled={!!window.ethereum}
+      walletInstallLink={'https://metamask.io/'}
+      walletLogo={{ src: Svgs.Metamask, alt: '' }}
+      isWalletEnabled={!!ethAddress}
+      connectHandler={onEvmWalletConnecthandler}
+    />
+  );
+};
+
+const SubstrateConnectWalletBlock = ({ setIsMetamaskSelected }) => {
+  const { connectWalletExtension } = useKeyring();
+
+  const onSubstrateWalletConnectHandler = (walletName) => () => {
+    connectWalletExtension(walletName);
+    setIsMetamaskSelected && setIsMetamaskSelected(false);
+  };
+
+  return getWallets().map((wallet) => {
+    // wallet.extension would not be defined if enabled not called
+    const isWalletEnabled = wallet.extension ? true : false;
+
+    return (
+      <ConnectWalletBlock
+        key={wallet.extensionName}
+        walletName={wallet.extensionName}
+        isWalletInstalled={wallet.installed}
+        walletInstallLink={wallet.installUrl}
+        walletLogo={wallet.logo}
+        isWalletEnabled={isWalletEnabled}
+        connectHandler={onSubstrateWalletConnectHandler(wallet.extensionName)}
+      />
+    );
+  });
+};
+
+const ConnectWalletModal = ({ setIsMetamaskSelected }) => {
   return (
     <div className="p-4 w-96">
       <h1 className="text-secondary text-xl">Connect wallet</h1>
-      {getWallets().map((wallet) => (
-        <ConnectWalletBlock
-          key={wallet.extensionName}
-          walletName={wallet.extensionName}
-          isWalletInstalled={wallet.installed}
-          walletInstallLink={wallet.installUrl}
-          walletLogo={wallet.logo}
-          // wallet.extension would not be defined if enabled not called
-          isWalletEnabled={wallet.extension}
-          connectHandler={onSubstrateWalletConnectHandler(wallet.extensionName)}
-        />
-      ))}
-      {/* setHasAuthConnectMetamask would be undefined when not in bridge page */}
-      {setHasAuthConnectMetamask && <ConnectWalletBlock
-        key={'metamask'}
-        walletName={'metamask'}
-        isWalletInstalled={!!window.ethereum}
-        walletInstallLink={"https://metamask.io/"}
-        walletLogo={{src: Svgs.Metamask, alt: ''}}
-        isWalletEnabled={!!ethAddress}
-        connectHandler={onEvmWalletConnecthandler}
-      />}
+      <SubstrateConnectWalletBlock
+        setIsMetamaskSelected={setIsMetamaskSelected}
+      />
+      <MetamaskConnectWalletBlock />
     </div>
   );
 };

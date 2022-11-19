@@ -199,7 +199,7 @@ export const BridgeDataContextProvider = (props) => {
   // to match the user's public account as set in the send form
   useEffect(() => {
     const syncExternalAccountToSubstrateAccount = () => {
-      senderSubstrateAccount && changeExternalAccount(senderSubstrateAccount, externalAccountOptions);
+      senderSubstrateAccount && changeExternalAccount(senderSubstrateAccount);
     };
     syncExternalAccountToSubstrateAccount();
   }, [
@@ -217,7 +217,7 @@ export const BridgeDataContextProvider = (props) => {
   // (see `syncPublicAccountToExternalAccount` above)
   const setSenderSubstrateAccount = async (senderSubstrateAccount) => {
     setLastAccessedExternalAccountAddress(senderSubstrateAccount.address);
-    await changeExternalAccount(senderSubstrateAccount, externalAccountOptions);
+    await changeExternalAccount(senderSubstrateAccount);
   };
 
   // Sets the asset type to be transacted

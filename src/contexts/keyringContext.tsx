@@ -20,6 +20,7 @@ import { useConfig } from './configContext';
 import { getWallets } from '@talismn/connect-wallets';
 
 const KeyringContext = createContext();
+const MAX_WAIT_COUNT= 5;
 
 export const KeyringContextProvider = (props) => {
   const config = useConfig();
@@ -74,7 +75,6 @@ export const KeyringContextProvider = (props) => {
               keyring.forgetAccount(oldAddress);
             }
           });
-          // (boyuan)todo: was triggering update everytime because object address change
           setSelectedWallet(wallet);
           setSavedKeyringAddresses(config, updatedAddresses)
           setKeyringAddresses(updatedAddresses);
@@ -95,13 +95,13 @@ export const KeyringContextProvider = (props) => {
         );
         setTimeout(async () => {
           await initKeyring();
-          if (waitExtensionCounter < 5) {
+          if (waitExtensionCounter < MAX_WAIT_COUNT) {
             setWaitExtensionCounter((counter) => counter + 1);
           }
         }, 500);
       } else {
         setTimeout(async () => {
-          if (waitExtensionCounter < 5) {
+          if (waitExtensionCounter < MAX_WAIT_COUNT) {
             setWaitExtensionCounter((counter) => counter + 1);
           }
         }, 500);
