@@ -130,6 +130,9 @@ const SingleAccountDisplay = ({
 
 const AccountSelectDropdown = ({ isMetamaskSelected }) => {
   const { ethAddress } = useMetamask();
+  console.log(`
+  ethAddress 1 - ${ethAddress}
+  `)
   const { externalAccount, externalAccountOptions, changeExternalAccount } =
     useExternalAccount();
 
