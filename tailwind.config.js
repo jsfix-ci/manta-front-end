@@ -3,6 +3,7 @@ module.exports = {
   darkMode: 'class',
   theme: {
     fontSize: {
+      xsss: '.70rem',
       xss: '.75rem',
       xs: '.825rem',
       sm: '.875rem',
@@ -25,8 +26,10 @@ module.exports = {
       spacing: {
         '128':'32rem'
       },
+      width: {
+        '68': '272px'
+      },
       backgroundImage: {},
-
       backgroundColor: {
         primary: 'var(--color-bg-primary)',
         secondary: 'var(--color-bg-secondary)',
@@ -37,7 +40,11 @@ module.exports = {
         success: 'var(--color-bg-success)',
         danger: 'var(--color-bg-danger)',
         'manta-gray': 'var(--color-bg-manta-gray)',
-        button: 'var(--color-bg-button)'
+        button: 'var(--color-bg-button)',
+        'account-display': '#050D32',
+        'account-icon-bar': '#11193C',
+        'connect-wallet-modal': '#11193C',
+        'connect-wallet-modal-button': '#2B49EA',
       },
       textColor: {
         accent: 'var(--color-text-accent)',

@@ -19,7 +19,7 @@ const ConnectWallet = ({ isButtonShape, setIsMetamaskSelected }) => {
         </Button>
       ) : (
         <FontAwesomeIcon
-          className="w-6 h-6 cursor-pointer z-10 text-secondary"
+          className="w-6 h-6 px-5 py-4 cursor-pointer z-10 text-secondary"
           icon={faPlusCircle}
           onClick={handleOnClick}
         />

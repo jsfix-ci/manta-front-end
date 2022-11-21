@@ -28,7 +28,6 @@ export const MetamaskContextProvider = (props) => {
 
   useEffect(() => {
     const detectMetamask = async () => {
-      if (hasAuthConnectMetamask) {
         if (!provider) {
           const metamask = await detectEthereumProvider({
             mustBeMetaMask: true
@@ -36,17 +35,16 @@ export const MetamaskContextProvider = (props) => {
           if (metamask) {
             setProvider(metamask);
             // check metamask locked 
-            if (metamask?.selectedAddress) {
+            if (metamask?.selectedAddress && hasAuthConnectMetamask) {
               setEthAddress(metamask.selectedAddress);
             }
           }
         } else {
           // check metamask locked 
-          if (provider?.selectedAddress) {
+          if (provider?.selectedAddress && hasAuthConnectMetamask) {
             setEthAddress(provider.selectedAddress);
           }
         }
-      }
     };
 
     const interval = setInterval(async () => {

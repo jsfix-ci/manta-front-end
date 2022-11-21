@@ -16,41 +16,32 @@ const WalletSelectIconBar = ({ isMetamaskSelected, setIsMetamaskSelected }) => {
   const SubstrateWallets = () =>
     enabledWallet.map((wallet) => (
       <button
+        className={classNames(
+          `px-5 py-4 ${
+            (wallet.extensionName === selectedWallet.extensionName && !isMetamaskSelected) ?
+            'bg-account-display' : ''
+          }`
+        )}
         key={wallet.extensionName}
         onClick={() => {
           subscribeWalletAccounts(wallet);
           setIsMetamaskSelected(false);
         }}
       >
-        <img
-          className={classNames(
-            `w-8 h-8 ${
-              wallet.extensionName === selectedWallet.extensionName &&
-              !isMetamaskSelected
-                ? ''
-                : 'filter grayscale'
-            }`
-          )}
-          src={wallet.logo.src}
-          alt={wallet.logo.alt}
-        />
+        <img className="w-8 h-8" src={wallet.logo.src} alt={wallet.logo.alt} />
       </button>
     ));
 
   const MetamaskWallet = () => (
     <button
-      key={'metamask'}
+      className={classNames(
+        `px-5 py-4 ${isMetamaskSelected ? 'bg-account-display' : ''}`
+      )}
       onClick={() => {
         setIsMetamaskSelected(true);
       }}
     >
-      <img
-        className={classNames(
-          `w-8 h-8 ${isMetamaskSelected ? '' : 'filter grayscale'}`
-        )}
-        src={Svgs.Metamask}
-        alt={'metamask'}
-      />
+      <img className="w-8 h-8" src={Svgs.Metamask} alt={'metamask'} />
     </button>
   );
 

@@ -42,7 +42,7 @@ const DisplayAccountsButton = () => {
       <OutsideClickHandler onOutsideClick={() => setShowAccountList(false)}>
         <div
           className={classNames(
-            'flex gap-3 py-3 p-6 bg-secondary text-secondary',
+            'flex gap-3 py-3 p-6 border border-white border-opacity-20 bg-white bg-opacity-5 dark:text-black dark:text-white',
             'font-medium cursor-pointer rounded-lg items-center',
             { disabled: disabled }
           )}
@@ -59,21 +59,22 @@ const DisplayAccountsButton = () => {
           {externalAccount?.meta.name}
         </div>
         {showAccountList && (
-          <div className="flex flex-col gap-3 mt-3 bg-secondary rounded-xl p-6 pr-2 absolute right-0 top-full z-50 border border-manta-gray">
-            <div className="text-lg font-medium text-black dark:text-white">
-              Wallet
+          <div className="flex flex-col mt-3 absolute right-0 top-full border border-white border-opacity-20 rounded-lg text-black dark:text-white">
+            <div className="flex flex-row items-center justify-between bg-account-icon-bar rounded-lg">
+              <div className="flex flex-row items-center">
+                <WalletSelectBar
+                  isMetamaskSelected={isMetamaskSelected}
+                  setIsMetamaskSelected={setIsMetamaskSelected}
+                />
+              </div>
+              <div className="relative top-1">
+                <ConnectWallet
+                  isButtonShape={false}
+                  setIsMetamaskSelected={setIsMetamaskSelected}
+                />
+              </div>
             </div>
-            <div className="flex flex-row items-center gap-4 pl-2">
-              <WalletSelectBar
-                isMetamaskSelected={isMetamaskSelected}
-                setIsMetamaskSelected={setIsMetamaskSelected}
-              />
-              <ConnectWallet
-                isButtonShape={false}
-                setIsMetamaskSelected={setIsMetamaskSelected}
-              />
-            </div>
-            <div className="max-h-96 overflow-y-auto pr-4">
+            <div className="max-h-96 overflow-y-auto bg-account-display px-5 py-5 rounded-lg">
               <AccountSelectDropdown isMetamaskSelected={isMetamaskSelected} />
             </div>
           </div>

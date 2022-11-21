@@ -40,6 +40,7 @@
         "decimal.js": "^10.3.1",
         "element-react": "^1.4.34",
         "element-theme-default": "^1.4.13",
+        "ethereum-blockies-base64": "^1.0.2",
         "ethers": "^5.6.9",
         "husky": "^7.0.1",
         "manta-polkawallet-bridge-dev": "0.0.6-dev11",

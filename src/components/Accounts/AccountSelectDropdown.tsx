@@ -11,6 +11,7 @@ import {
   faCopy
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import makeBlockie from 'ethereum-blockies-base64';
 
 const SingleAccountDisplay = ({
   accountName,
@@ -23,8 +24,13 @@ const SingleAccountDisplay = ({
   const [addressCopied, setAddressCopied] = useState(null);
   const succinctAddress = `${accountAddress?.slice(
     0,
-    4
-  )}...${accountAddress?.slice(-5)}`;
+    5
+  )}...${accountAddress?.slice(-4)}`;
+
+  const succinctAccountName =
+    accountName.length > 12
+      ? `${accountName?.slice(0, 12)}...`
+      : accountName;
 
   const blockExplorerLink = isMetamaskSelected
     ? `https://etherscan.io/address/${accountAddress}`
@@ -37,13 +43,14 @@ const SingleAccountDisplay = ({
 
   const BlockExplorerButton = () => (
     <a
+      className="pt-2"
       onClick={(e) => e.stopPropagation()}
       href={blockExplorerLink}
       target="_blank"
       rel="noopener noreferrer"
     >
       <FontAwesomeIcon
-        className="cursor-pointer"
+        className="cursor-pointer w-3 h-3"
         icon={faArrowUpRightFromSquare}
         href={blockExplorerLink}
       />
@@ -52,10 +59,10 @@ const SingleAccountDisplay = ({
 
   const AddressCopyButton = () =>
     addressCopied === accountAddress ? (
-      <FontAwesomeIcon icon={faCheck} />
+      <FontAwesomeIcon className="w-3 h-3" icon={faCheck} />
     ) : (
       <FontAwesomeIcon
-        className="cursor-pointer"
+        className="cursor-pointer w-3 h-3 hover:text-link"
         icon={faCopy}
         onClick={(e) => {
           e.stopPropagation();
@@ -67,9 +74,18 @@ const SingleAccountDisplay = ({
 
   const AccountIcon = () =>
     isMetamaskSelected ? (
-      <img className="w-6 h-6" src={Svgs.Metamask} alt={'metamask'} />
+      <img
+        className="ml-1 rounded-full w-6 h-6"
+        src={makeBlockie(accountAddress)}
+        alt={'blockie address icon'}
+      />
     ) : (
-      <Identicon value={accountAddress} size={32} theme="polkadot" />
+      <Identicon
+        value={accountAddress}
+        size={24}
+        theme="polkadot"
+        className="px-1"
+      />
     );
 
   useEffect(() => {
@@ -83,25 +99,29 @@ const SingleAccountDisplay = ({
   return (
     <div
       key={accountAddress}
-      className="hover:bg-thirdry cursor-pointer flex items-center gap-5 justify-between border border-secondary rounded-lg px-3 py-2 mb-5 text-green"
+      className="bg-white bg-opacity-5 cursor-pointer flex items-center gap-5 justify-between border border-white border-opacity-20 rounded-lg px-3 text-green w-68 h-16"
       onClick={onClickAccountHandler}
     >
       <div>
-        <div className="text-sm flex flex-row items-center gap-3">
+        <div className="flex flex-row items-center gap-3">
           <AccountIcon />
-          <div className="flex flex-col gap-1">
-            <div className="font-medium">{accountName}</div>
-            <div className="flex flex-row items-center gap-2">
+          <div className="flex flex-col">
+            <div className="text-base">{succinctAccountName}</div>
+            <div className="flex flex-row items-center gap-2 text-white opacity-60 text-sm">
               {succinctAddress}
-              <BlockExplorerButton />
-              <AddressCopyButton />
+              <div>
+                <BlockExplorerButton />
+              </div>
+              <div>
+                <AddressCopyButton />
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <div className="py-1 px-6">
+      <div className="relative right-2">
         {isAccountSelected && (
-          <FontAwesomeIcon icon={faCheck} className="fa-xl text-green-500" />
+          <img src={Svgs.GreenCheckIcon} alt={'green check'} />
         )}
       </div>
     </div>
@@ -122,18 +142,18 @@ const AccountSelectDropdown = ({ isMetamaskSelected }) => {
       onClickAccountHandler={() => {}}
     />
   ) : (
-    externalAccountOptions.map((account: any) => (
-      <SingleAccountDisplay
-        key={account.address}
-        accountName={account.meta.name}
-        accountAddress={account.address}
-        isAccountSelected={account.address === externalAccount.address}
-        isMetamaskSelected={isMetamaskSelected}
-        onClickAccountHandler={() =>
-          changeExternalAccount(account)
-        }
-      />
-    ))
+    <div className="flex flex-col gap-5">
+      {externalAccountOptions.map((account: any) => (
+        <SingleAccountDisplay
+          key={account.address}
+          accountName={account.meta.name}
+          accountAddress={account.address}
+          isAccountSelected={account.address === externalAccount.address}
+          isMetamaskSelected={isMetamaskSelected}
+          onClickAccountHandler={() => changeExternalAccount(account)}
+        />
+      ))}
+    </div>
   );
 };
 

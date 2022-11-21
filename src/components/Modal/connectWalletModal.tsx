@@ -16,25 +16,37 @@ const ConnectWalletBlock = ({
 }) => {
   if (isWalletEnabled) {
     return (
-      <div className="mt-6 p-4 flex items-center justify-between border border-manta-gray text-secondary rounded-xl w-full block">
-        <div className="flex flex-row items-center gap-2">
-          <img src={walletLogo.src} alt={walletLogo.alt} className="w-8 h-8" />
+      <div className="mt-6 py-3 px-4 h-16 flex items-center justify-between border border-manta-gray text-white rounded-lg w-full block">
+        <div className="flex flex-row items-center gap-4">
+          <img
+            src={walletLogo.src}
+            alt={walletLogo.alt}
+            className="w-6 h-6 rounded-full"
+          />
           {walletName}
         </div>
-        <div className="text-black dark:text-white">Connected</div>
+        <div className="flex flex-row gap-3 items-center rounded-lg text-xs">
+          <div className="rounded full w-2 h-2 bg-green-300"></div>Connected
+        </div>
       </div>
     );
   } else if (isWalletInstalled) {
     return (
       <button
         onClick={connectHandler}
-        className="mt-6 p-4 flex items-center justify-between border border-manta-gray text-secondary rounded-xl w-full block"
+        className="mt-6 py-3 px-4 h-16 flex items-center justify-between border border-manta-gray text-white rounded-lg w-full block"
       >
-        <div className="flex flex-row items-center gap-2">
-          <img src={walletLogo.src} alt={walletLogo.alt} className="w-8 h-8" />
+        <div className="flex flex-row items-center gap-4">
+          <img
+            src={walletLogo.src}
+            alt={walletLogo.alt}
+            className="w-6 h-6 rounded-full"
+          />
           {walletName}
         </div>
-        <div className="text-link">Connect</div>
+        <div className="rounded-lg bg-connect-wallet-modal-button py-2 px-4 text-xs">
+          Connect
+        </div>
       </button>
     );
   } else {
@@ -42,14 +54,20 @@ const ConnectWalletBlock = ({
       <a
         href={walletInstallLink}
         target="_blank"
-        className="mt-6 p-4 text-sm flex items-center justify-between border border-manta-gray text-secondary rounded-xl w-full block"
+        className="mt-6 py-3 px-4 h-16 text-sm flex items-center justify-between border border-manta-gray text-white rounded-lg w-full block"
         rel="noreferrer"
       >
-        <div className="flex flex-row items-center gap-2">
-          <img src={walletLogo.src} alt={walletLogo.alt} className="w-8 h-8" />
+        <div className="flex flex-row items-center gap-4">
+          <img
+            src={walletLogo.src}
+            alt={walletLogo.alt}
+            className="w-6 h-6 rounded-full"
+          />
           {walletName}
         </div>
-        <div className="text-link">Install</div>
+        <div className="rounded-lg bg-connect-wallet-modal-button py-2 px-4 text-xs">
+          Install
+        </div>
       </a>
     );
   }
@@ -59,17 +77,14 @@ const MetamaskConnectWalletBlock = () => {
   const { setHasAuthConnectMetamask, ethAddress, provider } = useMetamask();
 
   const onEvmWalletConnecthandler = () => {
-    if (ethAddress) {
-      setHasAuthToConnectMetamaskStorage(true);
-      setHasAuthConnectMetamask(true);
-    } else {
-      provider?.request({ method: 'eth_requestAccounts' });
-    }
+    setHasAuthToConnectMetamaskStorage(true);
+    setHasAuthConnectMetamask(true);
+    provider?.request({ method: 'eth_requestAccounts' });
   };
   return (
     <ConnectWalletBlock
       key={'metamask'}
-      walletName={'metamask'}
+      walletName={'Metamask'}
       isWalletInstalled={!!window.ethereum}
       walletInstallLink={'https://metamask.io/'}
       walletLogo={{ src: Svgs.Metamask, alt: '' }}
@@ -87,6 +102,10 @@ const SubstrateConnectWalletBlock = ({ setIsMetamaskSelected }) => {
     setIsMetamaskSelected && setIsMetamaskSelected(false);
   };
 
+  const capitalizeFirstLetter = (name) => {
+    return name.charAt(0).toUpperCase() + name.slice(1);
+  };
+
   return getWallets().map((wallet) => {
     // wallet.extension would not be defined if enabled not called
     const isWalletEnabled = wallet.extension ? true : false;
@@ -94,7 +113,7 @@ const SubstrateConnectWalletBlock = ({ setIsMetamaskSelected }) => {
     return (
       <ConnectWalletBlock
         key={wallet.extensionName}
-        walletName={wallet.extensionName}
+        walletName={capitalizeFirstLetter(wallet.extensionName)}
         isWalletInstalled={wallet.installed}
         walletInstallLink={wallet.installUrl}
         walletLogo={wallet.logo}
@@ -107,12 +126,16 @@ const SubstrateConnectWalletBlock = ({ setIsMetamaskSelected }) => {
 
 const ConnectWalletModal = ({ setIsMetamaskSelected }) => {
   return (
-    <div className="p-4 w-96">
-      <h1 className="text-secondary text-xl">Connect wallet</h1>
+    <div className="w-96">
+      <h1 className="text-xl text-white">Connect Wallet</h1>
       <SubstrateConnectWalletBlock
         setIsMetamaskSelected={setIsMetamaskSelected}
       />
       <MetamaskConnectWalletBlock />
+      <p className="flex flex-row gap-2 mt-5 text-secondary text-xsss">
+        <img src={Svgs.InformationIcon} />
+        Already installed? Try refreshing this page
+      </p>
     </div>
   );
 };
