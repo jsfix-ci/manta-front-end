@@ -47,17 +47,17 @@ export const SendContextProvider = (props) => {
 
   // Adds the user's polkadot.js accounts to state on pageload
   // These populate public address select dropdowns in the ui
-  
+
   // (BD Todo Ask kevin)
-  // useEffect(() => {
-  //   const initPublicAccountOptions = () => {
-  //     dispatch({
-  //       type: SEND_ACTIONS.SET_SENDER_PUBLIC_ACCOUNT_OPTIONS,
-  //       senderPublicAccountOptions: externalAccountOptions
-  //     });
-  //   };
-  //   initPublicAccountOptions();
-  // }, [externalAccountOptions]);
+  useEffect(() => {
+    const initPublicAccountOptions = () => {
+      dispatch({
+        type: SEND_ACTIONS.SET_SENDER_PUBLIC_ACCOUNT_OPTIONS,
+        senderPublicAccountOptions: externalAccountOptions
+      });
+    };
+    initPublicAccountOptions();
+  }, [externalAccountOptions]);
 
   // Adds the user's default private address to state on pageload
   useEffect(() => {
@@ -73,6 +73,7 @@ export const SendContextProvider = (props) => {
     }
   }, [privateAddress]);
 
+  // Initializes the receiving address
   useEffect(() => {
     const initReceiver = (receiverAddress) => {
       dispatch({
@@ -123,7 +124,7 @@ export const SendContextProvider = (props) => {
     receiverAddress,
     senderAssetType,
     receiverAssetType,
-    // (BD Todo Ask kevin) externalAccountOptions
+    externalAccountOptions// (BD Todo Ask kevin)
   ]);
 
   /**
@@ -360,10 +361,13 @@ export const SendContextProvider = (props) => {
 
   // Checks if the user has enough funds to pay for a transaction
   const userHasSufficientFunds = () => {
-    if (!senderAssetTargetBalance || !senderAssetCurrentBalance) {
-      return null;
-    }
     if (
+      !senderAssetTargetBalance
+      || !senderAssetCurrentBalance
+      || !senderNativeTokenPublicBalance
+    ) {
+      return null;
+    } else if (
       senderAssetTargetBalance.assetType.assetId !==
       senderAssetCurrentBalance.assetType.assetId
     ) {

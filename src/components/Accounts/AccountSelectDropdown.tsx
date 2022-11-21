@@ -83,15 +83,15 @@ const SingleAccountDisplay = ({
   return (
     <div
       key={accountAddress}
-      className="hover:bg-thirdry cursor-pointer flex items-center gap-5 justify-between border border-secondary rounded-lg px-3 py-2 mb-5 text-green"
+      className="hover:bg-thirdry cursor-pointer flex items-center gap-5 justify-between border border-secondary rounded-lg px-3 py-2 mb-5"
       onClick={onClickAccountHandler}
     >
       <div>
         <div className="text-sm flex flex-row items-center gap-3">
           <AccountIcon />
           <div className="flex flex-col gap-1">
-            <div className="font-medium">{accountName}</div>
-            <div className="flex flex-row items-center gap-2">
+            <div className="font-medium text-secondary">{accountName}</div>
+            <div className="flex flex-row text-secondary items-center gap-2">
               {succinctAddress}
               <BlockExplorerButton />
               <AddressCopyButton />
